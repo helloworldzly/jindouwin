@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="overflow-y: visible;">
+  <head>
+    <title>筋斗云学堂</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/sprintf.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+
+      });
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">筋斗云学堂</a>
+        </div>
+        <div class="collapse navbar-collapse">
+
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <p class="navbar-text">你好 曾兆阳</p>
+            </li>
+            <li>
+              <a href="#" data-toggle="tooltip" data-placement="bottom" title="注销" id="logout">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="col-md-3">
+        <ul class="list-group">
+          <a href="#profile" aria-controls="profile" data-toggle="tab" class="list-group-item list-group-item-default activt">
+            个人信息<span class="glyphicon glyphicon-chevron-right" aria-hidden="true" style="float:right;"></span>
+          </a>
+          <a href="#course" aria-controls="course" data-toggle="tab" class="list-group-item list-group-item-default">
+            我的课程<span class="glyphicon glyphicon-chevron-right" aria-hidden="true" style="float:right;"></span>
+          </a>
+        </ul>
+      </div>
+      <div class="col-md-9">
+        <div class="tab-content">
+          <div class="tab-pane fade in" id="profile">
+            <center><h1>个人信息</h1></center>
+            <hr>
+            <form onsubmit="return false;">
+              <div class="form-group">
+                <label for="username">
+                  <h4>用户名</h4>
+                </label>
+                <input type="text" class="form-control" disabled id="username" value="zengzhaoyang">
+              </div>
+              <div class="form-group">
+                <label for="password">
+                  <h4>密码</h4>
+                </label>
+                <input type="password" class="form-control" disabled id="password" value="********">
+              </div>
+              <div class="form-group">
+                <label for="name">
+                  <h4>姓名</h4>
+                </label>
+                <input type="text" class="form-control" disabled id="name" value="曾兆阳">
+              </div>
+              <div class="form-group">
+                <label for="studentid">
+                  <h4>学号</h4>
+                </label>
+                <input type="text" class="form-control" disabled id="studentid" value="12353255">
+              </div>
+              <div class="form-group">
+                <label for="email">
+                 <h4>邮箱</h4>
+                </label>
+                <input type="email" class="form-control" disabled id="email" value="664587718@qq.com">
+              </div>
+              <div class="form-group">
+                <label for="phone">
+                  <h4>电话</h4>
+                </label>
+                <input type="text" class="form-control" disabled id="phone" value="13631252971">
+              </div>
+              <button class="btn btn-warning">编辑</button>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="course">
+            <center><h1>我的课程</h1></center>
+            <hr>
+            <div class="col-md-6">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <h3>云计算应用开发</h3>
+                  <h4>王昌栋</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <h3>数据库系统设计</h3>
+                  <h4>郑贵锋</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <h3>做人</h3>
+                  <h4>曾兆阳</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
