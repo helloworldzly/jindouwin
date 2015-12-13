@@ -20,8 +20,8 @@ def register():
     studentid = form['studentid']
     usertype = form['usertype']
 
-    from lib import check_useranme_exist
-    if check_useranme_exist(username) == True:
+    from lib import check_username_exist
+    if check_username_exist(username) == True:
         return jsonify(res=USERNAME_EXIST)
 
     from lib import user_register
@@ -31,10 +31,11 @@ def register():
 
 @api.route('/user/login', methods=['POST'])
 def login():
-    cookies = request.cookies
-    if not 'session' in cookies:
-        return jsonify(res=PARAMETER_WRONG)
-    session = cookies['session']
+    # cookies = request.cookies
+    # if not 'session' in cookies:
+    #     return jsonify(res=PARAMETER_WRONG)
+    # session = cookies['session']
+    session = '111111'
 
     form = request.form
     if not 'username' in form or not 'password' in form:
@@ -52,21 +53,24 @@ def login():
 
 @api.route('/user/info', methods=['GET'])
 def info():
-    cookies = request.cookies
-    if not 'session' in cookies:
-        return jsonify(res=PARAMETER_WRONG)
-    session = cookies['session']
+    # cookies = request.cookies
+    # if not 'session' in cookies:
+    #     return jsonify(res=PARAMETER_WRONG)
+    # session = cookies['session']
+    session = '111111'
 
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN)
 
-    from lib import get_userinfo_by_id
-    user_info = get_userinfo_by_id(userid)
+    from lib import get_info_by_id
+    user_info = get_info_by_id(userid)
 
     return jsonify(res=SUCCESS, info=user_info)
 
 @api.route('/user/logout', methods=['GET'])
 def logout():
-    pass
+    resp = make_response(jsonify(res=SUCCESS))
+    resp.delete_cookies('session')
+    return resp

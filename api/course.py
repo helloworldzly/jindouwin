@@ -4,12 +4,13 @@ from api import api
 from flask import request, jsonify, make_response
 from config.rescode import *
 
-@api.route('/course/getcourse/', methods=['GET'])
+@api.route('/course/getcourse', methods=['GET'])
 def getcourse_list():
-    cookies = request.cookies
-    if not 'session' in cookies:
-        return jsonify(res=PARAMETER_WRONG)
-    session = cookies['session']
+    # cookies = request.cookies
+    # if not 'session' in cookies:
+    #     return jsonify(res=PARAMETER_WRONG)
+    # session = cookies['session']
+    session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
@@ -21,10 +22,11 @@ def getcourse_list():
 
 @api.route('/course/info/<courseid>', methods=['GET'])
 def getcourse_info(courseid):
-    cookies = request.cookies
-    if not 'session' in cookies:
-        return jsonify(res=PARAMETER_WRONG)
-    session = cookies['session']
+    # cookies = request.cookies
+    # if not 'session' in cookies:
+    #     return jsonify(res=PARAMETER_WRONG)
+    # session = cookies['session']
+    session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
@@ -61,10 +63,11 @@ def getcourse_news(courseid):
 
 @api.route('/course/homework/<courseid>', methods=['GET'])
 def getcourse_homework(courseid):
-    cookies = request.cookies
-    if not 'session' in cookies:
-        return jsonify(res=PARAMETER_WRONG)
-    session = cookies['session']
+    # cookies = request.cookies
+    # if not 'session' in cookies:
+    #     return jsonify(res=PARAMETER_WRONG)
+    # session = cookies['session']
+    session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:

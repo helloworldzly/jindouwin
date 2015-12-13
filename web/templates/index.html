@@ -12,9 +12,45 @@
     <script src="/static/js/sprintf.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
-
+        $.getJSON("/api/user/info",function(data,status){
+          var username=data.info.username;
+          var name=data.info.name;
+          var studentid=data.info.studentid;
+          var email=data.info.email;
+          var phone=data.info.phone;
+          $("#username").attr("value",username);
+          $("#password").attr("value","********");
+          $("#name").attr("value",name);
+          $("#studentid").attr("value",studentid);
+          $("#email").attr("value",email);
+          $("#phone").attr("value",phone);
+        });
+        $.getJSON("/api/course/getcourse",function(data,status){
+          var course=data.course;
+          var i;
+          var addhtml='<div class="col-md-6 course" courseid="%d">\
+              <div class="panel panel-default">\
+                <div class="panel-body">\
+                  <h3>%s</h3>\
+                  <h4>%s</h4>\
+                </div>\
+              </div>\
+            </div>'
+          for(i=0;i<course.length;i++){
+            $("#course").append(sprintf(addhtml,course[i].courseid,course[i].name,course[i].teacher))
+          }
+        });
+        $(document).on("click", ".course", function(){
+          var courseid=$(this).attr("courseid");
+          window.location.href="/course/"+courseid;
+        });
       });
     </script>
+    <style type="text/css">
+      .course{
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -59,37 +95,37 @@
                 <label for="username">
                   <h4>用户名</h4>
                 </label>
-                <input type="text" class="form-control" disabled id="username" value="zengzhaoyang">
+                <input type="text" class="form-control" disabled id="username">
               </div>
               <div class="form-group">
                 <label for="password">
                   <h4>密码</h4>
                 </label>
-                <input type="password" class="form-control" disabled id="password" value="********">
+                <input type="password" class="form-control" disabled id="password">
               </div>
               <div class="form-group">
                 <label for="name">
                   <h4>姓名</h4>
                 </label>
-                <input type="text" class="form-control" disabled id="name" value="曾兆阳">
+                <input type="text" class="form-control" disabled id="name">
               </div>
               <div class="form-group">
                 <label for="studentid">
                   <h4>学号</h4>
                 </label>
-                <input type="text" class="form-control" disabled id="studentid" value="12353255">
+                <input type="text" class="form-control" disabled id="studentid">
               </div>
               <div class="form-group">
                 <label for="email">
                  <h4>邮箱</h4>
                 </label>
-                <input type="email" class="form-control" disabled id="email" value="664587718@qq.com">
+                <input type="email" class="form-control" disabled id="email">
               </div>
               <div class="form-group">
                 <label for="phone">
                   <h4>电话</h4>
                 </label>
-                <input type="text" class="form-control" disabled id="phone" value="13631252971">
+                <input type="text" class="form-control" disabled id="phone">
               </div>
               <button class="btn btn-warning">编辑</button>
             </form>
@@ -97,7 +133,7 @@
           <div class="tab-pane fade" id="course">
             <center><h1>我的课程</h1></center>
             <hr>
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
               <div class="panel panel-default">
                 <div class="panel-body">
                   <h3>云计算应用开发</h3>
@@ -120,7 +156,7 @@
                   <h4>曾兆阳</h4>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

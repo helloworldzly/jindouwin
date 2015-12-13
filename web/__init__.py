@@ -42,9 +42,13 @@ def index():
 def index2():
     return render_template('index.html')
 
-@app.route('/course', methods=['GET'])
-def course():
-    return render_template('course.html')
+@app.route('/course/<courseid>', methods=['GET'])
+def course(courseid):
+    return render_template('course.html', courseid=courseid)
+
+@app.route('/course_admin/<courseid>', methods=['GET'])
+def course_admin(courseid):
+    return render_template('course_admin.html', courseid=courseid)
 
 @app.route('/downloads', methods=['GET'])
 def downloads():
