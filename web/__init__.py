@@ -1,7 +1,7 @@
 #-*-coding:utf-8-*-
 
 from server import app
-from flask import render_template, make_response, request, redirect
+from flask import render_template, make_response, request, redirect, send_from_directory
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -57,3 +57,10 @@ def downloads():
 @app.route('/news', methods=['GET'])
 def news():
     pass
+
+@app.route('/resource/<courseid>/<filename>', methods=['GET'])
+def resource(courseid, filename):
+    import os
+    path = os.path.realpath(__file__).split('/')[:-2]
+    path = '/'.join(path) + '/course/%s/resource/'%courseid
+    return send_from_directory(path, filename)

@@ -20,6 +20,19 @@ def check_attend_course(userid, courseid):
         return True
     return False
 
+def add_course(teacher, name, description, time, classroom):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('insert into course values(NULL,"%s","%s","%s","%s","%s")')
+    cur.execute('select * from course')
+    courseid = cur.rowcount
+    import os
+    path = os.path.realpath(__file__)
+    path = '/'.join(path[:-2]) + '/course/%d'%courseid
+    os.system("mkdir %s/homework"%path)
+    os.system("mkdir %s/resource"%path)
+
 def get_info_by_courseid(courseid):
     from model.mysql import MySQL
     sql = MySQL()
@@ -39,21 +52,21 @@ def get_info_by_courseid(courseid):
     course["classroom"] = course_data[5]
     return course
 
-def get_news_by_courseid(courseid):
-    from model.mysql import MySQL
-    sql = MySQL()
-    cur = sql.cur
-    cur.execute('select id,description,publisher from news where courseid=%s'%courseid)
-    res = []
-    for item in cur:
-        temp = item
-        res.append({
-            'id':temp[0],
-            'description':temp[1],
-            'publisher':temp[2]
-            })
-    sql.close()
-    return res
+# def get_news_by_courseid(courseid):
+#     from model.mysql import MySQL
+#     sql = MySQL()
+#     cur = sql.cur
+#     cur.execute('select id,description,publisher from news where courseid=%s'%courseid)
+#     res = []
+#     for item in cur:
+#         temp = item
+#         res.append({
+#             'id':temp[0],
+#             'description':temp[1],
+#             'publisher':temp[2]
+#             })
+#     sql.close()
+#     return res
 
 def get_homework_by_courseid(courseid):
     from model.mysql import MySQL
@@ -71,11 +84,44 @@ def get_homework_by_courseid(courseid):
     sql.close()
     return res
 
-def check_id_course_teacher(userid, courseid):
+def get_studentlist_by_courseid(courseid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select userid from courseattend where courseid=%s'%courseid)
+    res = []
+    for item in cur:
+        res.append(item[0])
+    sql.close()
+    return res
+
+def get_homeworksubmit_by_homeworkid(homeworkid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select userid from homeworksubmit where homeworkid=%s'%homeworkid)
+    res = []
+    for item in cur:
+        res.append(item[0])
+    sql.close()
+    return res
+
+def check_is_course_teacher(userid, courseid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
     cur.execute('select * from course,user where user.id="%s" and course.teacher=user.name'%userid)
+    if cur.rowcount == 0:
+        sql.close()
+        return False
+    sql.close()
+    return True
+
+def check_homework_exist(homeworkid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select * from homework where id=%s'%homeworkid)
     if cur.rowcount == 0:
         sql.close()
         return False
@@ -88,3 +134,61 @@ def add_homework_by_courseid(courseid, description, deadline):
     cur = sql.cur
     cur.execute('insert into homework values(NULL,%s,"%s","%s")'%(courseid, description, deadline))
     sql.close()
+
+def homework_submit(userid, homeworkid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('insert into homeworksubmit values(%s, %s)'%(userid, homeworkid))
+    sql.close()
+
+def get_homework_submit_by_userid(userid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select homeworkid from homeworksubmit where usrid=%s'%userid)
+    res = []
+    for item in cur:
+        res.append(item[0])
+    sql.close()
+    return res
+
+def add_resource_by_courseid(courseid, filename):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('insert into resource values(%s,"%s")'%(courseid, filename))
+    sql.close()
+
+def get_resource_by_courseid(courseid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select filename from resource where courseid=%s'%courseid)
+    res = []
+    for item in cur:
+        res.append(item[0])
+    sql.close()
+    return res
+
+def add_news_by_courseid(courseid, description, publisher, newstype):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('insert into news values(%s,"%s","%s","%s")')
+    sql.close()
+
+def get_news_by_courseid(courseid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select description,publisher,newstype from news where courseid=%s'%courseid)
+    res = []
+    for item in cur:
+        res.append({
+            'description':item[0],
+            'publisher':item[1],
+            'newstype':item[2]
+            })
+    sql.close()
+    return res
