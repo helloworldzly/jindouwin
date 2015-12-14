@@ -13,11 +13,13 @@ def check_username_exist(username):
 
 def user_register(username, password, email, phone, name, studentid, usertype):
     from model.mysql import MySQL
-    cur = MySQL().cur
+    sql = MySQL()
+    cur = sql.cur
     command = 'insert into user values(NULL,"%s","%s","%s","%s","%s","%s",%s)'%(username, password, email, phone, name, studentid, usertype)
     command = command.encode('utf-8')
     cur.execute(command)
-    cur.close()
+    sql.conn.commit()
+    sql.close()
 
 def user_login(username, password, session):
     from model.mysql import MySQL

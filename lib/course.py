@@ -25,6 +25,7 @@ def add_course(teacher, name, description, time, classroom):
     sql = MySQL()
     cur = sql.cur
     cur.execute('insert into course values(NULL,"%s","%s","%s","%s","%s")')
+    sql.conn.commit()
     cur.execute('select * from course')
     courseid = cur.rowcount
     import os
@@ -133,6 +134,7 @@ def add_homework_by_courseid(courseid, description, deadline):
     sql = MySQL()
     cur = sql.cur
     cur.execute('insert into homework values(NULL,%s,"%s","%s")'%(courseid, description, deadline))
+    sql.conn.commit()
     sql.close()
 
 def homework_submit(userid, homeworkid):
@@ -140,6 +142,7 @@ def homework_submit(userid, homeworkid):
     sql = MySQL()
     cur = sql.cur
     cur.execute('insert into homeworksubmit values(%s, %s)'%(userid, homeworkid))
+    sql.conn.commit()
     sql.close()
 
 def get_homework_submit_by_userid(userid):
@@ -158,6 +161,7 @@ def add_resource_by_courseid(courseid, filename):
     sql = MySQL()
     cur = sql.cur
     cur.execute('insert into resource values(%s,"%s")'%(courseid, filename))
+    sql.conn.commit()
     sql.close()
 
 def get_resource_by_courseid(courseid):
@@ -176,6 +180,7 @@ def add_news_by_courseid(courseid, description, publisher, newstype):
     sql = MySQL()
     cur = sql.cur
     cur.execute('insert into news values(%s,"%s","%s","%s")')
+    sql.conn.commit()
     sql.close()
 
 def get_news_by_courseid(courseid):
