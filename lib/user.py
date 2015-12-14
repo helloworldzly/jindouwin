@@ -64,6 +64,19 @@ def get_info_by_id(userid):
     info['studentid'] = info_data[6]
     return info
 
+def is_teawcher(userid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select usertype from user where id=%s'%userid)
+    res = []
+    for item in cur:
+        res.append(item)
+    info_data = res[0]
+    if str(info_data[0]) == '2':
+        return True
+    return False
+
 def get_name_by_id(userid):
     from model.mysql import MySQL
     sql = MySQL()

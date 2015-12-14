@@ -36,6 +36,7 @@
           $.post("/api/user/register",para,function(data,status){
             if(data.res=="00000"){
               alert("注册成功");
+              window.location.href="/login"
             }
             else{
               alert("注册失败")

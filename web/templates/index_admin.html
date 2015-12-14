@@ -21,6 +21,7 @@
           $("#username").attr("value",username);
           $("#password").attr("value","********");
           $("#name").attr("value",name);
+          $("#hiname").text("你好 "+name)
           $("#studentid").attr("value",studentid);
           $("#email").attr("value",email);
           $("#phone").attr("value",phone);
@@ -67,7 +68,7 @@
 
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <p class="navbar-text">你好 曾兆阳</p>
+              <p class="navbar-text" id="hiname"></p>
             </li>
             <li>
               <a href="#" data-toggle="tooltip" data-placement="bottom" title="注销" id="logout">

@@ -37,7 +37,11 @@ def index():
         if userid == None:
             return redirect('/login')
         else:
-            resp = make_response(render_template('index.html'))
+            from lib import is_teacher
+            if is_teacher(userid):
+                resp = make_response(render_template('index_admin.html'))
+            else:
+                resp = make_response(render_template('index.html'))
             return resp
     else:
         return redirect('/login')
@@ -48,7 +52,11 @@ def index2():
 
 @app.route('/course/<courseid>', methods=['GET'])
 def course(courseid):
-    return render_template('course.html', courseid=courseid)
+    from lib import is_teacher
+    if is_teacher(userid):
+        return render_template('course_admin.html', courseid=courseid)
+    else:
+        return render_template('course.html', courseid=courseid)
 
 @app.route('/course_admin/<courseid>', methods=['GET'])
 def course_admin(courseid):
