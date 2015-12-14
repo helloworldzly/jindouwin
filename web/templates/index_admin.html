@@ -44,6 +44,11 @@
           var courseid=$(this).attr("courseid");
           window.location.href="/course/"+courseid;
         });
+        $("#logout").click(function(){
+          $.getJSON("/api/user/logout",function(data,status){
+            window.location.href="/login"
+          });
+        });
       });
     </script>
     <style type="text/css">

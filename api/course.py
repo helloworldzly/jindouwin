@@ -6,11 +6,11 @@ from config.rescode import *
 
 @api.route('/course/getcourse', methods=['GET'])
 def getcourse_list():
-    # cookies = request.cookies
-    # if not 'session' in cookies:
-    #     return jsonify(res=PARAMETER_WRONG)
-    # session = cookies['session']
-    session = '111111'
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    # session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
@@ -22,11 +22,11 @@ def getcourse_list():
 
 @api.route('/course/info/<courseid>', methods=['GET'])
 def getcourse_info(courseid):
-    # cookies = request.cookies
-    # if not 'session' in cookies:
-    #     return jsonify(res=PARAMETER_WRONG)
-    # session = cookies['session']
-    session = '111111'
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    # session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
@@ -74,6 +74,34 @@ def course_add():
     add_course(teacher, name, description, time, classroom)
     return jsonify(res=SUCCESS)
 
+@api.route('/course/upload/namelist/<courseid>', methods=['POST'])
+def upload_namelist(courseid):
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    from lib import check_is_course_teacher
+    res = check_is_course_teacher(userid, courseid)
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+
+    files = request.files
+    f = files['file']
+    import os
+    path = os.path.realpath(__file__)
+    path = '/'.join(path[:-2]) + '/tmp/%s.csv'%courseid
+    f.save(path)
+
+    from lib import add_userlist_from_csv
+    add_userlist_from_csv(path)
+
+    return jsonify(res=SUCCESS)
+
 @api.route('/course/news/<courseid>', methods=['GET'])
 def getcourse_news(courseid):
     cookies = request.cookies
@@ -96,11 +124,11 @@ def getcourse_news(courseid):
 
 @api.route('/course/homework/<courseid>', methods=['GET'])
 def getcourse_homework(courseid):
-    # cookies = request.cookies
-    # if not 'session' in cookies:
-    #     return jsonify(res=PARAMETER_WRONG)
-    # session = cookies['session']
-    session = '111111'
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    # session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
@@ -121,6 +149,7 @@ def add_homework(courseid):
     if not 'session' in cookies:
         return jsonify(res=PARAMETER_WRONG)
     session = cookies['session']
+    # session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
@@ -180,6 +209,7 @@ def resource_upload(courseid):
     if not 'session' in cookies:
         return jsonify(res=PARAMETER_WRONG)
     session = cookies['session']
+    # session = '111111'
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
     if userid == None:
@@ -198,5 +228,29 @@ def resource_upload(courseid):
     path = '/'.join(path) + '/course/%s/resource/%s'%(courseid, filename)
     f.save(path)
 
+    from lib import add_resource_by_courseid
+    #print filename
+    add_resource_by_courseid(courseid, filename)
+
     return jsonify(res=SUCCESS)
 
+@api.route('/course/resource/<courseid>', methods=['GET'])
+def getcourse_resource(courseid):
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    # session = '111111'
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    from lib import check_attend_course
+    res = check_attend_course(userid, courseid)
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+
+    from lib import get_resource_by_courseid
+    course_resource = get_resource_by_courseid(courseid)
+    return jsonify(res=SUCCESS, resource=course_resource)

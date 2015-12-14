@@ -8,8 +8,8 @@ def login():
     cookies = request.cookies
     if 'session' in cookies:
         session = cookies['session']
-        from lib import get_username_by_session
-        username = get_username_by_session(session)
+        from lib import get_userid_by_session
+        username = get_userid_by_session(session)
         if username != None:
             return redirect('/')
     else:
@@ -23,13 +23,17 @@ def login():
 def login2():
     return render_template('login.html')
 
+@app.route('/register', methods=['GET'])
+def register():
+    return render_template('register.html')
+
 @app.route('/', methods=['GET'])
 def index():
     cookies = request.cookies
     if 'session' in cookies:
         session = cookies['session']
-        from lib import get_username_by_session
-        username = get_username_by_session(session)
+        from lib import get_userid_by_session
+        username = get_userid_by_session(session)
         if username == None:
             return redirect('/login')
         else:
@@ -63,4 +67,4 @@ def resource(courseid, filename):
     import os
     path = os.path.realpath(__file__).split('/')[:-2]
     path = '/'.join(path) + '/course/%s/resource/'%courseid
-    return send_from_directory(path, filename)
+    return send_from_directory(path, filename,as_attachment=True)

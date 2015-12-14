@@ -31,11 +31,11 @@ def register():
 
 @api.route('/user/login', methods=['POST'])
 def login():
-    # cookies = request.cookies
-    # if not 'session' in cookies:
-    #     return jsonify(res=PARAMETER_WRONG)
-    # session = cookies['session']
-    session = '111111'
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    # session = '111111'
 
     form = request.form
     if not 'username' in form or not 'password' in form:
@@ -53,11 +53,11 @@ def login():
 
 @api.route('/user/info', methods=['GET'])
 def info():
-    # cookies = request.cookies
-    # if not 'session' in cookies:
-    #     return jsonify(res=PARAMETER_WRONG)
-    # session = cookies['session']
-    session = '111111'
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    # session = '111111'
 
     from lib import get_userid_by_session
     userid = get_userid_by_session(session)
@@ -72,5 +72,5 @@ def info():
 @api.route('/user/logout', methods=['GET'])
 def logout():
     resp = make_response(jsonify(res=SUCCESS))
-    resp.delete_cookies('session')
+    resp.delete_cookie('session')
     return resp

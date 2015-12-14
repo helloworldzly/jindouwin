@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="overflow-y: visible;">
+  <head>
+    <title>筋斗云学堂——登录</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/sprintf.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#done").click(function(){
+          var username=$("#username").val();
+          var password=$("#password").val();
+          var password_re=$("#password-repeat").val();
+          var name=$("#name").val();
+          var studentid=$("#studentid").val();
+          var email=$("#email").val();
+          var phone=$("#phone").val();
+          var usertype=$("#usertype").val();
+          if(password!=password_re){
+            alert("两次输入的密码不一致");
+          }
+          var para={
+            'username':username,
+            'password':password,
+            'name':name,
+            'studentid':studentid,
+            'email':email,
+            'phone':phone,
+            'usertype':usertype
+          }
+          $.post("/api/user/register",para,function(data,status){
+            if(data.res=="00000"){
+              alert("注册成功");
+            }
+            else{
+              alert("注册失败")
+            }
+          });
+        });
+      });
+    </script>
+    <style type="text/css">
+      /*.container{
+        position: relative;
+        top:170px;
+      }*/
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h4>筋斗云学堂</h4>
+          </div>
+          <div class="panel-body">
+            <form onsubmit="return false">
+              <div class="form-group">
+                <label for="username">
+                  <h4>username:</h4>
+                </label>
+                <input class="form-control" type="text" id="username">
+              </div>
+              <div class="form-group">
+                <label for="password">
+                  <h4>password:</h4>
+                </label>
+                <input class="form-control" type="password" id="password">
+              </div>
+              <div class="form-group">
+                <label for="passwordrepeat">
+                  <h4>password-repeat:</h4>
+                </label>
+                <input class="form-control" type="password" id="password-repeat">
+              </div>
+              <div class="form-group">
+                <label for="name">
+                  <h4>name:</h4>
+                </label>
+                <input class="form-control" type="text" id="name">
+              </div>
+              <div class="form-group">
+                <label for="studentid">
+                  <h4>studentid/teacherid:</h4>
+                </label>
+                <input class="form-control" type="text" id="studentid">
+              </div>
+              <div class="form-group">
+                <label for="email">
+                  <h4>email:</h4>
+                </label>
+                <input class="form-control" type="email" id="email">
+              </div>
+              <div class="form-group">
+                <label for="phone">
+                  <h4>phone:</h4>
+                </label>
+                <input class="form-control" type="text" id="phone">
+              </div>
+              <div class="form-group">
+                <label for="usertype">
+                  <h4>usertype:</h4>
+                </label>
+                <select id="usertype" class="form-control">
+                  <option value="1">学生</option>
+                  <option value="2">老师</option>
+                </select>
+              </div>
+              <center><button class="btn btn-primary" id="done">登录</button></center>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
