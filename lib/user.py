@@ -64,7 +64,7 @@ def get_info_by_id(userid):
     info['studentid'] = info_data[6]
     return info
 
-def is_teawcher(userid):
+def is_teacher(userid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
@@ -77,7 +77,7 @@ def is_teawcher(userid):
         return True
     return False
 
-def get_name_by_id(userid):
+def get_name_by_userid(userid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur

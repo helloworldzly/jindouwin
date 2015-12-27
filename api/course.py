@@ -18,6 +18,10 @@ def getcourse_list():
 
     from lib import get_course_by_userid
     course_list = get_course_by_userid(userid)
+    #print course_list
+    #res = {'res':SUCCESS,'course':course_list}
+    #import json
+    #return json.dumps(res)
     return jsonify(res=SUCCESS, course=course_list)
 
 @api.route('/course/info/<courseid>', methods=['GET'])
@@ -43,7 +47,7 @@ def getcourse_info(courseid):
 
 @api.route('/course/add', methods=['POST'])
 def course_add():
-    cookies = request.cookies
+    '''cookies = request.cookies
     if not 'session' in cookies:
         return jsonify(res=PARAMETER_WRONG)
     session = cookies['session']
@@ -56,7 +60,7 @@ def course_add():
     res = check_user_is_teacher(userid)
     if res == False:
         return jsonify(res=PERMISSION_DENIED)
-
+'''
     form = request.form
     require = ['name', 'description', 'time', 'classroom']
     for item in require:
@@ -67,8 +71,10 @@ def course_add():
     description = form['description']
     time = form['time']
     classroom = form['classroom']
-    from lib import get_name_by_userid
-    teacher = get_name_by_userid(userid)
+    #userid = '1'
+    #from lib import get_name_by_userid
+    #teacher = get_name_by_userid(userid)
+    teacher = form['teacher']
 
     from lib import add_course
     add_course(teacher, name, description, time, classroom)

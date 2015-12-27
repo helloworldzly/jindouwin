@@ -7,7 +7,9 @@ def get_course_by_userid(userid):
     cur.execute('select courseattend.courseid,course.name,course.teacher from course,courseattend where courseattend.userid=%s and course.id=courseattend.courseid'%userid)
     res = []
     for item in cur:
-        res.append({'courseid':item[0],'name':item[1],'teacher':item[2]})
+        print item[1]
+        print item[2]
+        res.append({'courseid':item[0],'name':item[1].decode('utf-8'),'teacher':item[2].decode('utf-8')})
     sql.close()
     return res
 
@@ -24,15 +26,17 @@ def add_course(teacher, name, description, time, classroom):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('insert into course values(NULL,"%s","%s","%s","%s","%s")')
+    command = 'insert into course values(NULL,"%s","%s","%s","%s","%s")'%(teacher, name, description, time, classroom)
+    command = command.encode('utf-8') 
+    cur.execute(command)
     sql.conn.commit()
     cur.execute('select * from course')
     courseid = cur.rowcount
     import os
     path = os.path.realpath(__file__)
-    path = '/'.join(path[:-2]) + '/course/%d'%courseid
-    os.system("mkdir %s/homework"%path)
-    os.system("mkdir %s/resource"%path)
+    path = '/'.join(path.split('/')[:-2]) + '/course/%d'%courseid
+    os.system("mkdir -p %s/homework"%path)
+    os.system("mkdir -p %s/resource"%path)
 
 def get_info_by_courseid(courseid):
     from model.mysql import MySQL
@@ -133,7 +137,9 @@ def add_homework_by_courseid(courseid, description, deadline):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('insert into homework values(NULL,%s,"%s","%s")'%(courseid, description, deadline))
+    command = 'insert into homework values(NULL,%s,"%s","%s")'%(courseid, description, deadline)
+    command = command.encode('utf-8')
+    cur.execute(command)
     sql.conn.commit()
     sql.close()
 
@@ -160,7 +166,9 @@ def add_resource_by_courseid(courseid, filename):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('insert into resource values(%s,"%s")'%(courseid, filename))
+    command = 'insert into resource values(%s,"%s")'%(courseid, filename)
+    command = command.encode('utf-8')
+    cur.execute(command)
     sql.conn.commit()
     sql.close()
 
@@ -179,7 +187,9 @@ def add_news_by_courseid(courseid, description, publisher, newstype):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('insert into news values(%s,"%s","%s","%s")')
+    command = 'insert into news values(%s,"%s","%s","%s")'%(courseid, description, publisher, newstype)
+    command = command.encode('utf-8')
+    cur.execute(command)
     sql.conn.commit()
     sql.close()
 

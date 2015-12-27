@@ -52,11 +52,22 @@ def index2():
 
 @app.route('/course/<courseid>', methods=['GET'])
 def course(courseid):
-    from lib import is_teacher
-    if is_teacher(userid):
-        return render_template('course_admin.html', courseid=courseid)
+    cookies = request.cookies
+    if 'session' in cookies:
+        session = cookies['session']
+        from lib import get_userid_by_session
+        userid = get_userid_by_session(session)
+        if userid == None:
+            return redirect('/login')
+        else:
+            from lib import is_teacher
+            if is_teacher(userid):
+                resp = make_response(render_template('course_admin.html', courseid=courseid))
+            else:
+                resp = make_response(render_template('course.html', courseid=courseid))
+            return resp
     else:
-        return render_template('course.html', courseid=courseid)
+        return redirect('/login')
 
 @app.route('/course_admin/<courseid>', methods=['GET'])
 def course_admin(courseid):

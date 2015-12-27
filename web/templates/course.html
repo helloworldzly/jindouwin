@@ -20,10 +20,10 @@
           var course_time=data.info.time;
           var course_classroom=data.info.classroom;
           $("#course_name").text(course_name);
-          $("#course_description").text(course_description);
-          $("#course_teacher").text(course_teacher);
-          $("#course_time").text(course_time);
-          $("#course_classroom").text(course_classroom)
+         // $("#course_description").text(course_description);
+         // $("#course_teacher").text(course_teacher);
+         // $("#course_time").text(course_time);
+         // $("#course_classroom").text(course_classroom)
         });
 
         $.getJSON("/api/course/homework/{{courseid}}",function(data,status){
@@ -65,8 +65,9 @@
 
         $.getJSON("/api/user/info",function(data,status){
           if(data.res=="00000"){
-            $("#teachername").text(data.info.name);
-            $("#teacheremail").text(data.info.email);
+            $("#teachername").text("王昌栋");
+            $("#hiname").text("你好 "+data.info.name)
+            $("#teacheremail").text("wangcd3@mail2.sysu.edu.cn");
           }
         });
         $("#logout").click(function(){
@@ -87,7 +88,7 @@
 
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <p class="navbar-text">你好 曾兆阳</p>
+              <p class="navbar-text" id="hiname"></p>
             </li>
             <li>
               <a href="#" data-toggle="tooltip" data-placement="bottom" title="注销" id="logout">
@@ -112,14 +113,10 @@
             <h4>课程动态</h4>
           </div>
           <div class="panel-body">
-            <h4>哎呀我滴妈作业要交了</h4>
+            <h4>12月15日TA验收demo</h4>
             <hr>
-            <h4>哎呀我滴妈作业要交了</h4>
-            <hr>
-            <h4>哎呀我滴妈作业要交了</h4>
-            <hr>
-            <h4>哎呀我滴妈作业要交了</h4>
-            <hr>
+            <h4>12月15日提交report和proposal</h4>
+            
           </div>
         </div>
       </div>
@@ -140,7 +137,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4>课程作业</h4>
@@ -177,7 +174,7 @@
         </div>
         
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4>联系方式</h4>
@@ -185,11 +182,13 @@
           <div class="panel-body">
             <div class="media">
               <div class="media-left">
-                <img class="media-object" src="/static/img/aa.jpg">
+                <img src="/static/img/wcd.png"height="100" width="100"/ >
               </div>
               <div class="media-body">
                 <h4 class="media-heading" id="teachername"></h4>
                 <h5 id="teacheremail"></h5>
+		<h5>office hour: 周四 10:00～12:00</h5>
+		<a href="http://www.scholat.com/ChangDongWang">个人主页</a>
               </div>
             </div>
           </div>
