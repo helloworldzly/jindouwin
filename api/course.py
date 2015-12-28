@@ -66,7 +66,6 @@ def course_add():
     for item in require:
         if not item in form:
             return jsonify(res=PARAMETER_WRONG)
-
     name = form['name']
     description = form['description']
     time = form['time']
@@ -74,10 +73,16 @@ def course_add():
     #userid = '1'
     #from lib import get_name_by_userid
     #teacher = get_name_by_userid(userid)
-    teacher = form['teacher']
+    #teacher = form['teacher']
+    print name, description, time, classroom
 
-    from lib import add_course
-    add_course(teacher, name, description, time, classroom)
+    files = request.files
+    f = files['file']
+    filename = f.filename
+    f.save(filename)
+
+    #from lib import add_course
+    #add_course(teacher, name, description, time, classroom)
     return jsonify(res=SUCCESS)
 
 @api.route('/course/upload/namelist/<courseid>', methods=['POST'])

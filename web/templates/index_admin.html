@@ -50,6 +50,38 @@
             window.location.href="/login"
           });
         });
+
+        $("#addcoursestudentlist").click(function(){
+          $("#addcoursestudentfile").click();
+        });
+        $("#addcoursestudentfile").change(function(){
+          var name=this.files[0].name;
+          $("#addcoursehelp").text(name);
+        });
+
+        $("#addcoursebtn").click(function(){
+          var coursename=$("#addcoursename").val();
+          var coursedescription=$("#addcoursedescription").val();
+          var coursetime=$("#addcoursetime").val();
+          var courseclassroom=$("#addcourseclassroom").val();
+          var fd=new FormData();
+          fd.append("name",coursename);
+          fd.append("description",coursedescription);
+          fd.append("time",coursetime);
+          fd.append("classroom",courseclassroom);
+          var files=$("#addcoursestudentfile")[0].files;
+          fd.append("file",files[0]);
+          $.ajax({
+            url:"/api/course/add",
+            type:"POST",
+            data:fd,
+            processData:false,
+            contentType:false,
+            success:function(data){
+              alert("success");
+            }
+          });
+        });
       });
     </script>
     <style type="text/css">
@@ -165,7 +197,47 @@
                 </div>
               </div> -->
             </div>
-            <button class="btn btn-warning btn-lg">添加课程</button>
+            <button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#addcourse">添加课程</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="addcourse" tabindex="-1" role="dialog" aria-labelledby="addcourselabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">添加课程</h4>
+          </div>
+          <div class="modal-body">
+            <form onsubmit="return false;">
+              <div class="form-group">
+                <label for="addcoursename">课程名</label>
+                <input type="text" class="form-control" id="addcoursename">
+              </div>
+              <div class="form-group">
+                <label for="addcoursetdescription">课程描述</label>
+                <textarea class="form-control" id="addcoursedescription" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="addcoursetime">课程时间</label>
+                <input type="text" class="form-control" id="addcoursetime">
+              </div>
+              <div class="form-group">
+                <label for="addcourseclassroom">课程教室</label>
+                <input type="text" class="form-control" id="addcourseclassroom">
+              </div>
+              <input type="file" id="addcoursestudentfile" style="display:none;">
+              <button class="btn btn-primary" id="addcoursestudentlist">上传学生名单</button>
+              <span class="help-block" id="addcoursehelp">请以csv格式上传学生名单</span>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button class="btn btn-primary" id="addcoursebtn">创建</button>
           </div>
         </div>
       </div>

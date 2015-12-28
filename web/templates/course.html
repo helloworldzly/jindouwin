@@ -33,7 +33,7 @@
                 <p>%s</p>\
               </div>\
               <div class="col-md-3">\
-                <button class="btn btn-primary" id="homework%d">提交</button>\
+                <button class="btn btn-primary homeworkbtn" id="homework%d">提交</button>\
               </div>\
             </div>';
           if(data.res=="00000"){
@@ -49,6 +49,13 @@
               $("#homework").append(sprintf(addhtml,description,deadline,homeworkid));
             }
           }
+        });
+
+        $(document).on("click", ".homeworkbtn", function(){
+          $("#uploadhomework").modal("show");
+        });
+        $("#uploadhomeworkbutton").click(function(){
+          $("#uploadhomeworkfile").click();
         });
 
         $.getJSON("/api/course/resource/{{courseid}}",function(data,status){
@@ -187,9 +194,31 @@
               <div class="media-body">
                 <h4 class="media-heading" id="teachername"></h4>
                 <h5 id="teacheremail"></h5>
-		<h5>office hour: 周四 10:00～12:00</h5>
-		<a href="http://www.scholat.com/ChangDongWang">个人主页</a>
+                  <h5>office hour: 周四 10:00～12:00</h5>
+                  <a href="http://www.scholat.com/ChangDongWang">个人主页</a>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="uploadhomework" tabindex="-1" role="dialog" aria-labelledby="uploadhomeworklabel">  <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="uploadhomework-title">作业提交</h4>
+            </div>
+            <div class="modal-body">
+              <form onsubmit="return false;" id="uploadhomeworkform">
+                <input type="file" id="uploadhomeworkfile" style="display:none;">
+                <button class="btn btn-lg btn-primary" id="uploadhomeworkbutton">选择文件</button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button class="btn btn-primary" id="uploadbutton">上传</button>
             </div>
           </div>
         </div>
