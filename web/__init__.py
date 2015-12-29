@@ -86,4 +86,5 @@ def resource(courseid, filename):
     import os
     path = os.path.realpath(__file__).split('/')[:-2]
     path = '/'.join(path) + '/course/%s/resource/'%courseid
-    return send_from_directory(path, filename,as_attachment=True)
+    filename = filename.encode('utf-8')
+    return send_from_directory(path.encode('utf-8'), filename, as_attachment=True)

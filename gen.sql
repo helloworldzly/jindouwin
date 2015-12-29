@@ -2,7 +2,7 @@ create table user(id int(8) primary key not null AUTO_INCREMENT,username char(20
 
 create table course(id int(8) primary key not null AUTO_INCREMENT, teacher char(20) not null, name varchar(256) not null, description varchar(256) not null, time char(200) not null, classroom varchar(256) not null) charset=utf8;
 
-create table courseattend(courseid int(8), userid int(8)) charset=utf8;
+create table courseattend(courseid int(8), studentid char(20)) charset=utf8;
 
 create table homework(id int(8) primary key not null AUTO_INCREMENT,courseid int(8) not null, description varchar(256) not null, deadline varchar(256) not null) charset=utf8;
 

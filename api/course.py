@@ -16,12 +16,11 @@ def getcourse_list():
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import check_user_is_teacher
+    res = check_user_is_teacher(userid)
     from lib import get_course_by_userid
-    course_list = get_course_by_userid(userid)
-    #print course_list
-    #res = {'res':SUCCESS,'course':course_list}
-    #import json
-    #return json.dumps(res)
+    course_list = get_course_by_userid(userid, res)
+
     return jsonify(res=SUCCESS, course=course_list)
 
 @api.route('/course/info/<courseid>', methods=['GET'])
@@ -36,8 +35,11 @@ def getcourse_info(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import check_is_course_teacher
+    isteacher = check_is_course_teacher(userid, courseid)
+
     from lib import check_attend_course
-    res = check_attend_course(userid, courseid)
+    res = check_attend_course(userid, courseid, isteacher)
     if res == False:
         return jsonify(res=PERMISSION_DENIED)
 
@@ -47,7 +49,7 @@ def getcourse_info(courseid):
 
 @api.route('/course/add', methods=['POST'])
 def course_add():
-    '''cookies = request.cookies
+    cookies = request.cookies
     if not 'session' in cookies:
         return jsonify(res=PARAMETER_WRONG)
     session = cookies['session']
@@ -55,34 +57,32 @@ def course_add():
     userid = get_userid_by_session(session)
     if userid == None:
         return jsonify(USER_NOT_LOGIN_IN)
-
     from lib import check_user_is_teacher
     res = check_user_is_teacher(userid)
     if res == False:
         return jsonify(res=PERMISSION_DENIED)
-'''
     form = request.form
     require = ['name', 'description', 'time', 'classroom']
     for item in require:
         if not item in form:
             return jsonify(res=PARAMETER_WRONG)
+
     name = form['name']
     description = form['description']
     time = form['time']
     classroom = form['classroom']
-    #userid = '1'
-    #from lib import get_name_by_userid
-    #teacher = get_name_by_userid(userid)
-    #teacher = form['teacher']
-    print name, description, time, classroom
+
+    from lib import get_name_by_userid
+    teacher = get_name_by_userid(userid)
+    teacher = teacher.decode('utf-8')
 
     files = request.files
     f = files['file']
     filename = f.filename
-    f.save(filename)
+    f.save('tmp/' + filename)
 
-    #from lib import add_course
-    #add_course(teacher, name, description, time, classroom)
+    from lib import add_course
+    add_course(teacher, name, description, time, classroom, filename)
     return jsonify(res=SUCCESS)
 
 @api.route('/course/upload/namelist/<courseid>', methods=['POST'])
@@ -124,8 +124,11 @@ def getcourse_news(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import check_user_is_teacher
+    isteacher = check_user_is_teacher(userid)
+
     from lib import check_attend_course
-    res = check_attend_course(userid, courseid)
+    res = check_attend_course(userid, courseid, isteacher)
     if res == False:
         return jsonify(res=PERMISSION_DENIED)
 
@@ -145,8 +148,11 @@ def getcourse_homework(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import check_user_is_teacher
+    isteacher = check_user_is_teacher(userid)
+
     from lib import check_attend_course
-    res = check_attend_course(userid, courseid)
+    res = check_attend_course(userid, courseid, isteacher)
     if res == False:
         return jsonify(res=PERMISSION_DENIED)
 
@@ -193,7 +199,7 @@ def homework_submit(courseid, homeworkid):
         return jsonify(res=USER_NOT_LOGIN_IN)
 
     from lib import check_attend_course
-    res = check_attend_course(userid, courseid)
+    res = check_attend_course(userid, courseid, False)
     if res == False:
         return jsonify(res=PERMISSION_DENIED)
 
@@ -257,8 +263,10 @@ def getcourse_resource(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import check_user_is_teacher
+    isteacher = check_user_is_teacher(userid)
     from lib import check_attend_course
-    res = check_attend_course(userid, courseid)
+    res = check_attend_course(userid, courseid, isteacher)
     if res == False:
         return jsonify(res=PERMISSION_DENIED)
 

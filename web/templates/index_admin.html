@@ -33,12 +33,11 @@
               <div class="panel panel-default">\
                 <div class="panel-body">\
                   <h3>%s</h3>\
-                  <h4>%s</h4>\
                 </div>\
               </div>\
             </div>'
           for(i=0;i<course.length;i++){
-            $("#courseinfo").append(sprintf(addhtml,course[i].courseid,course[i].name,course[i].teacher))
+            $("#courseinfo").append(sprintf(addhtml,course[i].courseid,course[i].name))
           }
         });
         $(document).on("click", ".course", function(){

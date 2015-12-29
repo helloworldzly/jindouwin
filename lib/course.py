@@ -1,28 +1,39 @@
 #-*-coding:utf-8-*-
 
-def get_course_by_userid(userid):
+def get_course_by_userid(userid, isteacher):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('select courseattend.courseid,course.name,course.teacher from course,courseattend where courseattend.userid=%s and course.id=courseattend.courseid'%userid)
-    res = []
-    for item in cur:
-        print item[1]
-        print item[2]
-        res.append({'courseid':item[0],'name':item[1].decode('utf-8'),'teacher':item[2].decode('utf-8')})
-    sql.close()
-    return res
-
-def check_attend_course(userid, courseid):
+    if isteacher == False:
+        cur.execute('select courseattend.courseid,course.name,course.teacher from course,courseattend,user where user.id=%s and courseattend.studentid=user.studentid and course.id=courseattend.courseid'%userid)
+        res = []
+        for item in cur:
+            res.append({'courseid':item[0],'name':item[1].decode('utf-8'),'teacher':item[2].decode('utf-8')})
+        sql.close()
+        return res
+    else:
+        cur.execute('select course.id,course.name from course,user where course.teacher=user.name and user.id=%s'%userid)
+        res = []
+        for item in cur:
+            res.append({'courseid':item[0],'name':item[1].decode('utf-8')})
+        sql.close()
+        return res
+def check_attend_course(userid, courseid, isteacher):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('select * from courseattend where userid=%s and courseid=%s'%(userid, courseid))
-    if cur.rowcount != 0:
-        return True
-    return False
+    if isteacher == False:
+        cur.execute('select * from courseattend,user where user.id=%s and courseattend.studentid=user.studentid and courseid=%s'%(userid, courseid))
+        if cur.rowcount != 0:
+            return True
+        return False
+    else:
+        cur.execute('select * from course,user where course.teacher=user.name and user.id=%s'%userid)
+        if cur.rowcount != 0:
+            return True
+        return False
 
-def add_course(teacher, name, description, time, classroom):
+def add_course(teacher, name, description, time, classroom, filename):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
@@ -34,9 +45,24 @@ def add_course(teacher, name, description, time, classroom):
     courseid = cur.rowcount
     import os
     path = os.path.realpath(__file__)
+    filepath = '/'.join(path.split('/')[:-2]) + '/tmp/' + filename
     path = '/'.join(path.split('/')[:-2]) + '/course/%d'%courseid
     os.system("mkdir -p %s/homework"%path)
     os.system("mkdir -p %s/resource"%path)
+
+    f = open(filepath)
+    line = f.readline()
+    command = ''
+    while line:
+        import re
+        temp = re.split(',|;', line)
+        studentid = temp[0]
+        name = temp[1]
+        command += 'insert into courseattend values(%s,"%s")'%(courseid, studentid)
+        line = f.readline();
+    cur.execute(command)
+    sql.conn.commit()
+    sql.close()
 
 def get_info_by_courseid(courseid):
     from model.mysql import MySQL
@@ -93,7 +119,7 @@ def get_studentlist_by_courseid(courseid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('select userid from courseattend where courseid=%s'%courseid)
+    cur.execute('select user.userid,user.studentid from user,courseattend where courseattend.courseid=%s and courseattend.studentid=user.studentid'%courseid)
     res = []
     for item in cur:
         res.append(item[0])

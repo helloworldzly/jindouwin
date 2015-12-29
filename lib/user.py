@@ -85,7 +85,7 @@ def get_name_by_userid(userid):
     res = []
     for item in cur:
         res.append(item)
-    return res[0]
+    return res[0][0]
 
 def check_user_is_teacher(userid):
     from model.mysql import MySQL
