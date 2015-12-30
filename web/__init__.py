@@ -69,6 +69,25 @@ def course(courseid):
     else:
         return redirect('/login')
 
+@app.route('/homework/<courseid>/<homeworkid>', methods=['GET'])
+def homework(courseid, homeworkid):
+    cookies = request.cookies
+    if 'session' in cookies:
+        session = cookies['session']
+        from lib import get_userid_by_session
+        userid = get_userid_by_session(session)
+        if userid == None:
+            return redirect('/login')
+        else:
+            from lib import is_teacher
+            if is_teacher(userid):
+                resp = make_response(render_template('homework_admin.html', courseid=courseid, homeworkid=homeworkid))
+            else:
+                resp = make_response(render_template('course.html', courseid=courseid))
+            return resp
+    else:
+        return redirect('/login')
+
 @app.route('/course_admin/<courseid>', methods=['GET'])
 def course_admin(courseid):
     return render_template('course_admin.html', courseid=courseid)
@@ -88,3 +107,39 @@ def resource(courseid, filename):
     path = '/'.join(path) + '/course/%s/resource/'%courseid
     filename = filename.encode('utf-8')
     return send_from_directory(path.encode('utf-8'), filename, as_attachment=True)
+
+@app.route('/homework/download/<courseid>/<homeworkid>/<studentuserid>', methods=['GET'])
+def homework_download(courseid, homeworkid, studentuserid):
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+    from lib import check_is_course_teacher
+    res = check_is_course_teacher(userid, courseid)
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+    from lib import check_homework_exist
+    res = check_homework_exist(homeworkid)
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+
+    if '.' in studentuserid:
+        import os
+        path = os.path.realpath(__file__).split('/')[:-2]
+        path = '/'.join(path) + '/course/%s/homework/%s'%(courseid, homeworkid)
+        filename = studentuserid
+        return send_from_directory(path.encode('utf-8'), filename, as_attachment=True)
+    else:
+        import os
+        path = os.path.realpath(__file__).split('/')[:-2]
+        path = '/'.join(path) + '/course/%s/homework/%s'%(courseid, homeworkid)
+        all_file = os.walk(path)
+        for (a,b,c) in all_file:
+            for item in c:
+                if item.split('.')[0] == studentuserid:
+                    filename = item
+        return redirect('/homework/download/%s/%s/%s'%(courseid,homeworkid,filename))

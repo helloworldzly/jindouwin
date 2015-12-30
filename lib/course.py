@@ -51,15 +51,19 @@ def add_course(teacher, name, description, time, classroom, filename):
     os.system("mkdir -p %s/resource"%path)
 
     f = open(filepath)
-    line = f.readline()
+    data = f.read()
+    f.close()
+    data = data.split()
     command = ''
-    while line:
+    for item in data:
         import re
-        temp = re.split(',|;', line)
+        temp = re.split(',|;', item)
+        print temp
         studentid = temp[0]
         name = temp[1]
-        command += 'insert into courseattend values(%s,"%s")'%(courseid, studentid)
-        line = f.readline();
+        command += 'insert into courseattend values(%s,"%s");'%(courseid, studentid)
+       # line = f.readline();
+    print command
     cur.execute(command)
     sql.conn.commit()
     sql.close()
@@ -99,7 +103,7 @@ def get_info_by_courseid(courseid):
 #     sql.close()
 #     return res
 
-def get_homework_by_courseid(courseid):
+def get_homework_by_courseid(courseid, userid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
@@ -112,6 +116,16 @@ def get_homework_by_courseid(courseid):
             'description':temp[1],
             'deadline':temp[2]
             })
+    cur.execute('select homeworkid from homeworksubmit where userid=%s'%userid)
+    homeworklist = []
+    for item in cur:
+        homeworklist.append(item[0])
+    for i in range(len(res)):
+        homeworkid = res[i]['id']
+        if homeworkid in homeworklist:
+            res[i]['issubmit'] = '1'
+        else:
+            res[i]['issubmit'] = '0'
     sql.close()
     return res
 
@@ -119,10 +133,10 @@ def get_studentlist_by_courseid(courseid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('select user.userid,user.studentid from user,courseattend where courseattend.courseid=%s and courseattend.studentid=user.studentid'%courseid)
+    cur.execute('select user.id,user.name,user.studentid from user,courseattend where courseattend.courseid=%s and courseattend.studentid=user.studentid'%courseid)
     res = []
     for item in cur:
-        res.append(item[0])
+        res.append((item[0],item[2],item[1]))
     sql.close()
     return res
 

@@ -99,6 +99,7 @@
                   upload_file(i+1,n);
                 else{
                   alert("upload success");
+                  window.location.reload();
                   $("#addresource").modal("hide");
                 }
               }
@@ -115,6 +116,7 @@
           $.post("/api/course/add/homework/{{courseid}}",para,function(data,status){
             if(data.res=="00000"){
               alert("添加成功");
+              window.location.reload();
               $("#homework_description").val("");
               $("#homework_deadline").val("");
               $("#addhomework").modal("hide")
@@ -129,7 +131,7 @@
                 <p>%s</p>\
               </div>\
               <div class="col-md-3">\
-                <p class="text-success" id="homework%d"></p>\
+                <button class="btn btn-success btn-sm homworkbrowse" homeworkid="%d" style="float:right;">查看提交</button>\
               </div>\
             </div>';
           if(data.res=="00000"){
@@ -145,6 +147,11 @@
               $("#homework").append(sprintf(addhtml,description,deadline,homeworkid));
             }
           }
+        });
+
+        $(document).on("click",".homworkbrowse",function(){
+          var homeworkid=$(this).attr("homeworkid");
+          window.location.href="/homework/{{courseid}}/"+homeworkid;
         });
 
         $.getJSON("/api/course/resource/{{courseid}}",function(data,status){

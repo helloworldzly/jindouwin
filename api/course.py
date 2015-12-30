@@ -157,7 +157,7 @@ def getcourse_homework(courseid):
         return jsonify(res=PERMISSION_DENIED)
 
     from lib import get_homework_by_courseid
-    course_homework = get_homework_by_courseid(courseid)
+    course_homework = get_homework_by_courseid(courseid, userid)
     return jsonify(res=SUCCESS, homework=course_homework)
 
 @api.route('/course/add/homework/<courseid>', methods=['POST'])
@@ -187,7 +187,7 @@ def add_homework(courseid):
     add_homework_by_courseid(courseid, description, deadline)
     return jsonify(res=SUCCESS)
 
-@api.route('/course/homework/submit/<courseid>/<homeworkid>', methods=['POST'])
+@api.route('/course/homework/submit/<courseid>/<homeworkid>', methods=['GET','POST'])
 def homework_submit(courseid, homeworkid):
     cookies = request.cookies
     if not 'session' in cookies:
@@ -198,27 +198,60 @@ def homework_submit(courseid, homeworkid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
-    from lib import check_attend_course
-    res = check_attend_course(userid, courseid, False)
-    if res == False:
-        return jsonify(res=PERMISSION_DENIED)
+    if request.method == 'POST':
 
-    from lib import check_homework_exist
-    res = check_homework_exist(homeworkid)
-    if res == False:
-        return jsonify(res=PERMISSION_DENIED)
+        from lib import check_attend_course
+        res = check_attend_course(userid, courseid, False)
+        if res == False:
+            return jsonify(res=PERMISSION_DENIED)
 
-    files = request.files
-    f = files['file']
-    filename = f.filename
-    filetype = filename.split('.')[-1]
-    filename = userid + '.' + filetype
-    import os
-    path = os.path.realpath(__file__).split('/')[:-2]
-    path = '/'.join(path) + '/course/%s/homework/%s/%s'%(courseid, homeworkid, filename)
-    f.save(path)
+        from lib import check_homework_exist
+        res = check_homework_exist(homeworkid)
+        if res == False:
+            return jsonify(res=PERMISSION_DENIED)
 
-    return jsonify(res=SUCCESS)
+        files = request.files
+        f = files['file']
+        filename = f.filename
+        filetype = filename.split('.')[-1]
+        filename = userid + '.' + filetype
+
+        import os
+        path = os.path.realpath(__file__).split('/')[:-2]
+        dirpath = '/'.join(path) + '/course/%s/homework/%s'%(courseid, homeworkid)
+        os.system("mkdir -p %s"%dirpath)
+        path = '/'.join(path) + '/course/%s/homework/%s/%s'%(courseid, homeworkid, filename)
+        f.save(path)
+
+        from lib import homework_submit
+        homework_submit(userid, homeworkid)
+
+        return jsonify(res=SUCCESS)
+    else:
+        from lib import check_is_course_teacher
+        res = check_is_course_teacher(userid, courseid)
+        if res == False:
+            return jsonify(res=PERMISSION_DENIED)
+
+        from lib import check_homework_exist
+        res = check_homework_exist(homeworkid)
+        if res == False:
+            return jsonify(res=PERMISSION_DENIED)
+
+        from lib import get_studentlist_by_courseid
+        studentlist = get_studentlist_by_courseid(courseid)
+
+        from lib import get_homeworksubmit_by_homeworkid
+        homeworksubmit = get_homeworksubmit_by_homeworkid(homeworkid)
+
+        res = []
+        for item in studentlist:
+            if item[0] in homeworksubmit:
+                res.append({'userid':item[0],'name':item[1],'studentid':item[2],'issubmit':'1'})
+            else:
+                res.append({'userid':item[0],'name':item[1],'studentid':item[2],'issubmit':'0'})
+        return jsonify(res=SUCCESS, homework=res)
+
 
 @api.route('/course/resource/upload/<courseid>', methods=['POST'])
 def resource_upload(courseid):

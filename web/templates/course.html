@@ -33,7 +33,7 @@
                 <p>%s</p>\
               </div>\
               <div class="col-md-3">\
-                <button class="btn btn-primary homeworkbtn" id="homework%d">提交</button>\
+                <button class="btn btn-%s btn-sm homeworkbtn" homeworkid="%d" style="float:right;">%s</button>\
               </div>\
             </div>';
           if(data.res=="00000"){
@@ -46,16 +46,62 @@
               var description=homework[i].description;
               var deadline=homework[i].deadline;
               var homeworkid=homework[i].id;
-              $("#homework").append(sprintf(addhtml,description,deadline,homeworkid));
+              var issubmit=homework[i].issubmit;
+              if(issubmit=="0")
+                $("#homework").append(sprintf(addhtml,description,deadline,"primary",homeworkid,"提交"));
+              else
+                $("#homework").append(sprintf(addhtml,description,deadline,"success",homeworkid,"已提交"));
             }
           }
         });
-
+        var homeworkid;
         $(document).on("click", ".homeworkbtn", function(){
           $("#uploadhomework").modal("show");
+          homeworkid=$(this).attr("homeworkid");
+          $("#uploadprogress").hide();
         });
         $("#uploadhomeworkbutton").click(function(){
           $("#uploadhomeworkfile").click();
+        });
+        $("#uploadhomeworkfile").change(function(){
+          var name=this.files[0].name;
+          $("#uploadhelp").text(name);
+          $("#uploadprogress").find(".progress-bar").attr("style","min-width:2em;width:0%").attr("aria-valuenow","0").text("0%").removeClass("progress-bar-success");
+          $("#uploadprogress").show();
+        });
+        $("#uploadbutton").click(function(){
+          var files=$("#uploadhomeworkfile")[0].files[0];
+          var fd=new FormData();
+          fd.append("file",files);
+          $.ajax({
+            url:"/api/course/homework/submit/{{courseid}}/"+homeworkid,
+            type:"POST",
+            data:fd,
+            processData:false,
+            contentType:false,
+            xhr:function(){
+              var xhrobj=$.ajaxSettings.xhr();
+              if(xhrobj.upload){
+                xhrobj.upload.addEventListener("progress",function(event){
+                  var percent=0;
+                  var position=event.loaded||event.position;
+                  var total=event.total||event.totalSize;
+                  if(event.lengthComputable){
+                    percent=Math.ceil(position*1.0/total*100);
+                  }
+                  $("#uploadprogress").find(".progress-bar").attr(
+                    "style",sprintf("min-width:2em;width:%d%%",percent)).attr(
+                    "aria-valuenow",sprintf("%d",percent)).text(sprintf("%d%%",percent));
+                });
+              }
+              return xhrobj;
+            },
+            success:function(data){
+              $("#uploadprogress").find(".progress-bar").addClass("progress-bar-success");
+              alert("提交成功");
+              window.location.reload();
+            }
+          })
         });
 
         $.getJSON("/api/course/resource/{{courseid}}",function(data,status){
@@ -214,6 +260,11 @@
               <form onsubmit="return false;" id="uploadhomeworkform">
                 <input type="file" id="uploadhomeworkfile" style="display:none;">
                 <button class="btn btn-lg btn-primary" id="uploadhomeworkbutton">选择文件</button>
+                <span class="help-block" id="uploadhelp">请选择文件</span>
+                <div class="progress" id="uploadprogress">
+                  <div class="progress-bar" style="min-width:2em; width:0%" aria-valuenow="0" aria-valuemax="100" aria-valuemin="0">0%
+                  </div>
+                </div>
               </form>
             </div>
             <div class="modal-footer">
