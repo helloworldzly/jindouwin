@@ -341,3 +341,33 @@ def course_teacher_info(courseid):
     from lib import get_course_teacher_info_by_courseid
     teacher = get_course_teacher_info_by_courseid(courseid)
     return jsonify(res=SUCCESS, teacher=teacher)
+
+@api.route('/course/add/news/<courseid>', methods=['GET'])
+def course_add_news(courseid):
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    form = request.form
+    if not 'notice' in form:
+        return jsonify(res=PARAMETER_WRONG)
+    notice = form['notice']
+
+    from lib import get_name_by_userid
+    name = get_name_by_userid(userid)
+    name = name.decode('utf-8')
+
+    from lib import check_is_course_teacher
+    res = check_is_course_teacher(userid, courseid)
+
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+
+    from lib import add_news_by_courseid
+    add_news_by_courseid(courseid, notice, name, 3)
+    return jsonify(res=SUCCESS)
