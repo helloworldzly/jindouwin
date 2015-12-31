@@ -172,6 +172,9 @@ def add_homework(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import get_name_by_userid
+    name = get_name_by_userid(userid)
+
     from lib import check_is_course_teacher
     res = check_is_course_teacher(userid, courseid)
     if res == False:
@@ -185,6 +188,10 @@ def add_homework(courseid):
 
     from lib import add_homework_by_courseid
     add_homework_by_courseid(courseid, description, deadline)
+
+    from lib import add_news_by_couseid
+    add_news_by_couseid(courseid, description, name, 2)
+
     return jsonify(res=SUCCESS)
 
 @api.route('/course/homework/submit/<courseid>/<homeworkid>', methods=['GET','POST'])
@@ -265,6 +272,9 @@ def resource_upload(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import get_name_by_userid
+    name = get_name_by_userid(userid)
+
     from lib import check_is_course_teacher
     res = check_is_course_teacher(userid, courseid)
     if res == False:
@@ -279,8 +289,9 @@ def resource_upload(courseid):
     f.save(path)
 
     from lib import add_resource_by_courseid
-    #print filename
     add_resource_by_courseid(courseid, filename)
+    from lib import add_news_by_couseid
+    add_news_by_couseid(courseid, filename, name, 1)
 
     return jsonify(res=SUCCESS)
 
@@ -306,3 +317,4 @@ def getcourse_resource(courseid):
     from lib import get_resource_by_courseid
     course_resource = get_resource_by_courseid(courseid)
     return jsonify(res=SUCCESS, resource=course_resource)
+

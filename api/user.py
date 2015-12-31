@@ -29,6 +29,32 @@ def register():
 
     return jsonify(res=SUCCESS)
 
+@api.route('/user/update', methods=['POST'])
+def update():
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    form = request.form
+    require = ['email', 'phone', 'name', 'studentid']
+    for item in require:
+        if not item in form:
+            return jsonify(res=PARAMETER_WRONG)
+
+    email = form['email']
+    phone = form['phone']
+    name = form['name']
+    studentid = form['studentid']
+
+    from lib import update_username_info
+    update_username_info(email, phone, name, studentid, userid)
+    return jsonify(res=SUCCESS)
+
 @api.route('/user/login', methods=['POST'])
 def login():
     cookies = request.cookies

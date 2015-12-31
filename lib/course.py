@@ -243,7 +243,7 @@ def get_news_by_courseid(courseid):
         res.append({
             'description':item[0],
             'publisher':item[1],
-            'newstype':item[2]
+            'newstype':str(item[2])
             })
     sql.close()
     return res

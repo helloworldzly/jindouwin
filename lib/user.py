@@ -21,6 +21,16 @@ def user_register(username, password, email, phone, name, studentid, usertype):
     sql.conn.commit()
     sql.close()
 
+def update_user_info(email, phone, name, studentid, userid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    command = 'update user set email="%s",phone="%s",name="%s",studentid="%s" where id=%s'%(email, phone, name, studentid, userid)
+    command = command.encode('utf-8')
+    cur.execute(command)
+    sql.conn.commit()
+    sql.close()
+
 def user_login(username, password, session):
     from model.mysql import MySQL
     sql = MySQL()
