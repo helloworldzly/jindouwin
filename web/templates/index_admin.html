@@ -57,6 +57,33 @@
           var name=this.files[0].name;
           $("#addcoursehelp").text(name);
         });
+        $("#edit").click(function(){
+          $(this).removeClass("btn-warning").addClass("btn-primary");
+          $("#name").removeAttr("disabled");
+          $("#studentid").removeAttr("disabled");
+          $("#email").removeAttr("disabled");
+          $("#phone").removeAttr("disabled");
+          $(this).text("提交");
+          $(this).addClass("updatesubmit");
+          $(".updatesubmit").click(function(){
+            var name=$("#name").val();
+            var studentid=$("#studentid").val();
+            var email=$("#email").val();
+            var phone=$("#phone").val();
+            var para={
+              "name":name,
+              "studentid":studentid,
+              "email":email,
+              "phone":phone
+            }
+            $.post("/api/user/update",para,function(data,status){
+              if(data.res="00000"){
+                alert("修改成功");
+                window.location.reload();
+              }
+            });
+          });
+        });  
 
         $("#addcoursebtn").click(function(){
           var coursename=$("#addcoursename").val();
@@ -165,7 +192,7 @@
                 </label>
                 <input type="text" class="form-control" disabled id="phone">
               </div>
-              <button class="btn btn-warning">编辑</button>
+              <button class="btn btn-warning" id="edit">编辑</button>
             </form>
           </div>
           <div class="tab-pane fade" id="course">

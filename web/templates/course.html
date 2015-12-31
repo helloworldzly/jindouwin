@@ -124,10 +124,10 @@
               start=news.length-4;
             for(var i=news.length-1;i>=start;i--){
               if(news[i].newstype=="1"){
-                $("news").append(sprintf('<h4><b>%s</b> 上传了文件 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
+                $("#news").append(sprintf('<h4><b>%s</b> 上传了文件 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
               }
               else{
-                $("news").append(sprintf('<h4><b>%s</b> 发布了作业 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
+                $("#news").append(sprintf('<h4><b>%s</b> 发布了作业 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
               }
             }
           }

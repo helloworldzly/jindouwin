@@ -227,8 +227,9 @@ def add_news_by_courseid(courseid, description, publisher, newstype):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    command = 'insert into news values(%s,"%s","%s","%s")'%(courseid, description, publisher, newstype)
+    command = 'insert into news values(NULL,%s,"%s","%s",%d)'%(courseid, description, publisher, newstype)
     command = command.encode('utf-8')
+    print command
     cur.execute(command)
     sql.conn.commit()
     sql.close()

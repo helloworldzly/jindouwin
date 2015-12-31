@@ -48,33 +48,31 @@
 
         $("#edit").click(function(){
           $(this).removeClass("btn-warning").addClass("btn-primary");
-          $("#name").attr("disabled","");
-          $("#studentid").attr("disabled","");
-          $("#email").attr("disabled","");
-          $("#phone").attr("disabled","");
+          $("#name").removeAttr("disabled");
+          $("#studentid").removeAttr("disabled");
+          $("#email").removeAttr("disabled");
+          $("#phone").removeAttr("disabled");
           $(this).text("提交");
           $(this).addClass("updatesubmit");
-        });
-
-        $(document).on("click", ".updatesubmit", function(){
-          var name=$("#name").val();
-          var studentid=$("#studentid").val();
-          var email=$("#email").val();
-          var phone=$("#phone").val();
-          var para={
-            "name":name,
-            "studentid":studentid,
-            "email":email,
-            "phone":phone
-          }
-          $.post("/api/user/update",para,function(data,status){
-            if(data.res="00000"){
-              alert("修改成功");
-              window.location.reload();
+          $(".updatesubmit").click(function(){
+            var name=$("#name").val();
+            var studentid=$("#studentid").val();
+            var email=$("#email").val();
+            var phone=$("#phone").val();
+            var para={
+              "name":name,
+              "studentid":studentid,
+              "email":email,
+              "phone":phone
             }
+            $.post("/api/user/update",para,function(data,status){
+              if(data.res="00000"){
+                alert("修改成功");
+                window.location.reload();
+              }
+            });
           });
-        });
-
+        });  
         $("#logout").click(function(){
           $.getJSON("/api/user/logout",function(data,status){
             window.location.href="/login"

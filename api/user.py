@@ -51,8 +51,8 @@ def update():
     name = form['name']
     studentid = form['studentid']
 
-    from lib import update_username_info
-    update_username_info(email, phone, name, studentid, userid)
+    from lib import update_user_info
+    update_user_info(email, phone, name, studentid, userid)
     return jsonify(res=SUCCESS)
 
 @api.route('/user/login', methods=['POST'])

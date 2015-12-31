@@ -174,6 +174,7 @@ def add_homework(courseid):
 
     from lib import get_name_by_userid
     name = get_name_by_userid(userid)
+    name = name.decode('utf-8')
 
     from lib import check_is_course_teacher
     res = check_is_course_teacher(userid, courseid)
@@ -189,8 +190,8 @@ def add_homework(courseid):
     from lib import add_homework_by_courseid
     add_homework_by_courseid(courseid, description, deadline)
 
-    from lib import add_news_by_couseid
-    add_news_by_couseid(courseid, description, name, 2)
+    from lib import add_news_by_courseid
+    add_news_by_courseid(courseid, description, name, 2)
 
     return jsonify(res=SUCCESS)
 
@@ -274,6 +275,7 @@ def resource_upload(courseid):
 
     from lib import get_name_by_userid
     name = get_name_by_userid(userid)
+    name = name.decode('utf-8')
 
     from lib import check_is_course_teacher
     res = check_is_course_teacher(userid, courseid)
@@ -290,8 +292,8 @@ def resource_upload(courseid):
 
     from lib import add_resource_by_courseid
     add_resource_by_courseid(courseid, filename)
-    from lib import add_news_by_couseid
-    add_news_by_couseid(courseid, filename, name, 1)
+    from lib import add_news_by_courseid
+    add_news_by_courseid(courseid, filename, name, 1)
 
     return jsonify(res=SUCCESS)
 
