@@ -166,6 +166,23 @@
           }
         });
 
+        $.getJSON("/api/course/news/{{courseid}}", function(data,status){
+          if(data.res=="00000"){
+            var news=data.news;
+            var start=0;
+            if(news.length-4>start)
+              start=news.length-4;
+            for(var i=news.length-1;i>=start;i--){
+              if(news[i].newstype=="1"){
+                $("news").append(sprintf('<h4><b>%s</b> 上传了文件 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
+              }
+              else{
+                $("news").append(sprintf('<h4><b>%s</b> 发布了作业 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
+              }
+            }
+          }
+        });
+
         $.getJSON("/api/user/info",function(data,status){
           if(data.res=="00000"){
             $("#teachername").text("王昌栋");
@@ -215,11 +232,7 @@
           <div class="panel-heading">
             <h4>课程动态</h4>
           </div>
-          <div class="panel-body" id="homeworkinfo">
-            <h4>12月15日TA验收demo</h4>
-            <hr>
-            <h4>12月15日提交report和proposal</h4>
-            <hr>
+          <div class="panel-body" id="news">
           </div>
         </div>
       </div>
