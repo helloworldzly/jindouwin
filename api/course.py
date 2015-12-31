@@ -327,7 +327,7 @@ def course_teacher_info(courseid):
         return jsonify(res=PARAMETER_WRONG)
     session = cookies['session']
     from lib import get_userid_by_session
-    userid = get_userid_by_session
+    userid = get_userid_by_session(session)
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 

@@ -25,6 +25,16 @@
           //$("#course_time").text(course_time);
           //$("#course_classroom").text(course_classroom)
         });
+        $.getJSON("/api/course/teacher/info/"+courseid, function(data,status){
+          if(data.res=="00000"){
+            var teachername=data.teacher.teachername;
+            var teacheremail=data.teacher.teacheremail;
+            var teacheravatar=data.teacher.teacheravatar;
+            $("#teacher_avatar").attr("src","/static/user/avatar/"+teacheravatar);
+            $("#teacher_name").text(teachername);
+            $("#teacher_email").text(teacheremail).attr("href","mailto:"+teacheremail);
+          }
+        });
         $("#uploadbutton").click(function(){
           $("#uploadfile").click();
         });
@@ -205,6 +215,10 @@
           <a class="navbar-brand" href="#">筋斗云学堂</a>
         </div>
         <div class="collapse navbar-collapse">
+         <ul class="nav navbar-nav">
+            <li><a href="/">首页</a></li>
+            <li class="active"><a href="#">课程</a></li>
+          </ul>
 
           <ul class="nav navbar-nav navbar-right">
             <li>
@@ -312,13 +326,11 @@
           <div class="panel-body">
             <div class="media">
               <div class="media-left">
-                <img src="/static/img/wcd.png"height="100" width="100"/ >
+                <img src="" width="100" id="teacher_avatar" >
               </div>
               <div class="media-body">
-                <h4 class="media-heading" id="teachername"></h4>
-                <h5 id="teacheremail"></h5>
-		<h5>office hour: 周四 10:00~12:00</h5>
-                <a href="http://www.scholat.com/ChangDongWang">个人主页</a>
+                <h4 class="media-heading" id="teacher_name"></h4>
+                <h5><a id="teacher_email"></a></h5>
               </div>
             </div>
           </div>

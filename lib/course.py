@@ -237,7 +237,7 @@ def get_course_teacher_info_by_courseid(courseid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    cur.execute('select user.name,user.email,user.avatar from user,course where courseid=%s and user.nane=course.teacher'%courseid)
+    cur.execute('select user.name,user.email,user.avatar from user,course where course.id=%s and user.name=course.teacher'%courseid)
     res = []
     for item in cur:
         res.append({'teachername':item[0],'teacheremail':item[1],'teacheravatar':item[2]})

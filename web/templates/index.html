@@ -26,7 +26,7 @@
           $("#studentid").attr("value",studentid);
           $("#email").attr("value",email);
           $("#phone").attr("value",phone);
-          $("#avatar").attr("src".avatar);
+          $("#avatar").attr("src",avatar);
         });
         $.getJSON("/api/course/getcourse",function(data,status){
           var course=data.course;

@@ -72,7 +72,7 @@ def get_info_by_id(userid):
     info['phone'] = info_data[4]
     info['name'] = info_data[5]
     info['studentid'] = info_data[6]
-    info['avatar'] = info_data[7]
+    info['avatar'] = info_data[8]
     return info
 
 def is_teacher(userid):
@@ -102,6 +102,7 @@ def check_user_is_teacher(userid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
+    print('select * from user where id=%s and usertype=2'%userid)
     cur.execute('select * from user where id=%s and usertype=2'%userid)
     if cur.rowcount == 0:
         return False

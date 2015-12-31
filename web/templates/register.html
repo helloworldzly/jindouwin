@@ -91,7 +91,7 @@
           $("#avatar").click();
         });
         $("#avatar").change(function(){
-          var url=this.files[0];
+          var url=geturl(this.files[0]);
           $("#avatarimg").show();
           $("#avatarimg").attr("src",url);
         });
@@ -161,7 +161,7 @@
                 </select>
               </div>
               <input type="file" id="avatar" style="display:none">
-              <button calss="btn btn-primary" id="avatarbtn">上传头像</button>
+              <button class="btn btn-primary" id="avatarbtn">上传头像</button>
               <img height="100px" id="avatarimg" style="display:none;">
               <center><button class="btn btn-primary" id="done">注册</button></center>
             </form>
