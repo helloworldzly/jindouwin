@@ -87,22 +87,6 @@ def get_info_by_courseid(courseid):
     course["classroom"] = course_data[5]
     return course
 
-# def get_news_by_courseid(courseid):
-#     from model.mysql import MySQL
-#     sql = MySQL()
-#     cur = sql.cur
-#     cur.execute('select id,description,publisher from news where courseid=%s'%courseid)
-#     res = []
-#     for item in cur:
-#         temp = item
-#         res.append({
-#             'id':temp[0],
-#             'description':temp[1],
-#             'publisher':temp[2]
-#             })
-#     sql.close()
-#     return res
-
 def get_homework_by_courseid(courseid, userid):
     from model.mysql import MySQL
     sql = MySQL()
@@ -248,3 +232,14 @@ def get_news_by_courseid(courseid):
             })
     sql.close()
     return res
+
+def get_course_teacher_info_by_courseid(courseid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select user.name,user.email,user.avatar from user,course where courseid=%s and user.nane=course.teacher'%courseid)
+    res = []
+    for item in cur:
+        res.append({'teachername':item[0],'teacheremail':item[1],'teacheravatar':item[2]})
+    sql.close()
+    return res[0]

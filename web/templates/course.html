@@ -26,6 +26,17 @@
          // $("#course_classroom").text(course_classroom)
         });
 
+        $.getJSON("/api/course/teacher/info/"+courseid, function(data,status){
+          if(data.res=="00000"){
+            var teachername=data.teacher.teachername;
+            var teacheremail=data.teacher.teacheremail;
+            var teacheravatar=data.teacher.teacheravatar;
+            $("#teacheravatar").attr("src","/static/user/avatar/"+teacheravatar);
+            $("#teachername").text(teachername);
+            $("#teacheremail").text(teacheremail).attr("href","mailto:"+teacheremail);
+          }
+        });
+
         $.getJSON("/api/course/homework/{{courseid}}",function(data,status){
           var addhtml='<div class="row">\
               <div class="col-md-9">\
@@ -182,11 +193,7 @@
           <div class="panel-heading">
             <h4>课程动态</h4>
           </div>
-          <div class="panel-body" id="news">
-            <!-- <h4>12月15日TA验收demo</h4>
-            <hr>
-            <h4>12月15日提交report和proposal</h4> -->
-            
+          <div class="panel-body" id="news"> 
           </div>
         </div>
       </div>
@@ -196,14 +203,6 @@
             <h4>课程资料</h4>
           </div>
           <div class="panel-body" id="resourceinfo">
-            <!-- <h4>第四个PPT</h4>
-            <hr>
-            <h4>第三个PPT</h4>
-            <hr>
-            <h4>第二个PPT</h4>
-            <hr>
-            <h4>第一个PPT</h4>
-            <hr> -->
           </div>
         </div>
       </div>
@@ -213,33 +212,6 @@
             <h4>课程作业</h4>
           </div>
           <div class="panel-body" id="homework">
-            <!-- <div class="row">
-              <div class="col-md-9">
-                <h4>第四次作业</h4>
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-primary" style="float:right;">提交</button>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-md-9">
-                <h4>第三次作业</h4>
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-success" style="float:right;">再次提交</button>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-md-9">
-                <h4>第四次作业</h4>
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-warning disabled" style="float:right;">截止提交</button>
-              </div>
-            </div> -->
-
           </div>
         </div>
         
@@ -252,13 +224,11 @@
           <div class="panel-body">
             <div class="media">
               <div class="media-left">
-                <img src="/static/img/wcd.png"height="100" width="100"/ >
+                <img src="" height="100" width="100" id="teacher_avatar">
               </div>
               <div class="media-body">
-                <h4 class="media-heading" id="teachername"></h4>
-                <h5 id="teacheremail"></h5>
-                  <h5>office hour: 周四 10:00～12:00</h5>
-                  <a href="http://www.scholat.com/ChangDongWang">个人主页</a>
+                <h4 class="media-heading" id="teacher_name"></h4>
+                <h5><a id="teacher_email"></a></h5>
               </div>
             </div>
           </div>

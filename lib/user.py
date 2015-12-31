@@ -11,11 +11,11 @@ def check_username_exist(username):
     sql.close()
     return True
 
-def user_register(username, password, email, phone, name, studentid, usertype):
+def user_register(username, password, email, phone, name, studentid, usertype, filename):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    command = 'insert into user values(NULL,"%s","%s","%s","%s","%s","%s",%s)'%(username, password, email, phone, name, studentid, usertype)
+    command = 'insert into user values(NULL,"%s","%s","%s","%s","%s","%s",%s,"%s")'%(username, password, email, phone, name, studentid, usertype,filename)
     command = command.encode('utf-8')
     cur.execute(command)
     sql.conn.commit()
@@ -72,6 +72,7 @@ def get_info_by_id(userid):
     info['phone'] = info_data[4]
     info['name'] = info_data[5]
     info['studentid'] = info_data[6]
+    info['avatar'] = info_data[7]
     return info
 
 def is_teacher(userid):

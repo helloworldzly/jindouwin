@@ -143,3 +143,4 @@ def homework_download(courseid, homeworkid, studentuserid):
                 if item.split('.')[0] == studentuserid:
                     filename = item
         return redirect('/homework/download/%s/%s/%s'%(courseid,homeworkid,filename))
+

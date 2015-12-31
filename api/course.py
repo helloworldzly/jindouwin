@@ -320,3 +320,24 @@ def getcourse_resource(courseid):
     course_resource = get_resource_by_courseid(courseid)
     return jsonify(res=SUCCESS, resource=course_resource)
 
+@api.route('/course/teacher/info/<courseid>', methods=['GET'])
+def course_teacher_info(courseid):
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    from lib import check_user_is_teacher
+    isteacher = check_user_is_teacher(userid)
+    from lib import check_attend_course
+    res = check_attend_course(userid, courseid, isteacher)
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+
+    from lib import get_course_teacher_info_by_courseid
+    teacher = get_course_teacher_info_by_courseid(courseid)
+    return jsonify(res=SUCCESS, teacher=teacher)

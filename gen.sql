@@ -1,4 +1,4 @@
-create table user(id int(8) primary key not null AUTO_INCREMENT,username char(20) not null,password char(20) not null,email char(20) not null,phone char(20) not null,name char(20) not null, studentid char(20) not null,usertype int(8) not null) charset=utf8;
+create table user(id int(8) primary key not null AUTO_INCREMENT,username char(20) not null,password char(20) not null,email char(20) not null,phone char(20) not null,name char(20) not null, studentid char(20) not null,usertype int(8) not null, avatar vchar(256)) charset=utf8;
 
 create table course(id int(8) primary key not null AUTO_INCREMENT, teacher char(20) not null, name varchar(256) not null, description varchar(256) not null, time char(200) not null, classroom varchar(256) not null) charset=utf8;
 

@@ -24,8 +24,17 @@ def register():
     if check_username_exist(username) == True:
         return jsonify(res=USERNAME_EXIST)
 
+    files = request.files
+    f = files['file']
+    filename = f.filename
+    filetype = filename.split('.')[-1]
+    from lib import generate_session
+    code = generate_session()
+    filename = code + '.' + filetype
+    f.save("static/user/avatar/"+filename)
+
     from lib import user_register
-    user_register(username, password, email, phone, name, studentid, usertype)
+    user_register(username, password, email, phone, name, studentid, usertype, filename)
 
     return jsonify(res=SUCCESS)
 

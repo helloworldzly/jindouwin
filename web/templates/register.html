@@ -23,6 +23,11 @@
           var usertype=$("#usertype").val();
           if(password!=password_re){
             alert("两次输入的密码不一致");
+            return;
+          }
+          if(username==""||password==""||name==""||studentid==""||email==""||phone==""){
+            alert("输入不能为空");
+            return;
           }
           var para={
             'username':username,
@@ -33,23 +38,66 @@
             'phone':phone,
             'usertype':usertype
           }
-          $.post("/api/user/register",para,function(data,status){
-            if(data.res=="00000"){
-              alert("注册成功");
-              window.location.href="/login"
+          var fd=new FormData()
+          fd.append("username",username);
+          fd.append("password",password);
+          fd.append("name",name);
+          fd.append("studentid",studentid);
+          fd.append("email",email);
+          fd.append("phone",phone);
+          fd.append("usertype",usertype);
+          fd.append("file",$("#avatar")[0].files[0]);
+          $.ajax({
+            url:"/api/user/register",
+            type:"POST",
+            data:fd,
+            processData:false,
+            contentType:false,
+            success:function(data){
+              if(data.res=="00000"){
+                alert("注册成功");
+                window.location.href="/login"
+              }
+              else{
+                alert("注册失败")
+              }
             }
-            else{
-              alert("注册失败")
-            }
-          });
+          })
+          // $.post("/api/user/register",para,function(data,status){
+          //   if(data.res=="00000"){
+          //     alert("注册成功");
+          //     window.location.href="/login"
+          //   }
+          //   else{
+          //     alert("注册失败")
+          //   }
+          // });
+        });
+
+        function geturl(file){
+          var url=null;
+          if(window.createObjectURL!=undefined){
+            url=window.createObjectURL(file);
+          }
+          else if(window.URL!=undefined){
+            url=window.URL.createObjectURL(file);
+          }
+          else if(window.webkitURL!=undefined){
+            url=window.webkitURL.createObjectURL(file);
+          }
+          return url;
+        }
+        $("#avatarbtn").click(function(){
+          $("#avatar").click();
+        });
+        $("#avatar").change(function(){
+          var url=this.files[0];
+          $("#avatarimg").show();
+          $("#avatarimg").attr("src",url);
         });
       });
     </script>
     <style type="text/css">
-      /*.container{
-        position: relative;
-        top:170px;
-      }*/
     </style>
   </head>
   <body>
@@ -112,6 +160,9 @@
                   <option value="2">老师</option>
                 </select>
               </div>
+              <input type="file" id="avatar" style="display:none">
+              <button calss="btn btn-primary" id="avatarbtn">上传头像</button>
+              <img height="100px" id="avatarimg" style="display:none;">
               <center><button class="btn btn-primary" id="done">注册</button></center>
             </form>
           </div>
