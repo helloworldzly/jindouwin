@@ -18,6 +18,7 @@
           var studentid=data.info.studentid;
           var email=data.info.email;
           var phone=data.info.phone;
+          var avatar="/static/user/avatar/"+data.info.avatar;
           $("#username").attr("value",username);
           $("#password").attr("value","********");
           $("#name").attr("value",name);
@@ -25,6 +26,7 @@
           $("#studentid").attr("value",studentid);
           $("#email").attr("value",email);
           $("#phone").attr("value",phone);
+          $("#avatar").attr("src",avatar); 
         });
         $.getJSON("/api/course/getcourse",function(data,status){
           var course=data.course;
@@ -57,6 +59,33 @@
           var name=this.files[0].name;
           $("#addcoursehelp").text(name);
         });
+        $("#edit").click(function(){
+          $(this).removeClass("btn-warning").addClass("btn-primary");
+          $("#name").removeAttr("disabled");
+          $("#studentid").removeAttr("disabled");
+          $("#email").removeAttr("disabled");
+          $("#phone").removeAttr("disabled");
+          $(this).text("提交");
+          $(this).addClass("updatesubmit");
+          $(".updatesubmit").click(function(){
+            var name=$("#name").val();
+            var studentid=$("#studentid").val();
+            var email=$("#email").val();
+            var phone=$("#phone").val();
+            var para={
+              "name":name,
+              "studentid":studentid,
+              "email":email,
+              "phone":phone
+            }
+            $.post("/api/user/update",para,function(data,status){
+              if(data.res="00000"){
+                alert("修改成功");
+                window.location.reload();
+              }
+            });
+          });
+        });  
 
         $("#addcoursebtn").click(function(){
           var coursename=$("#addcoursename").val();
@@ -125,9 +154,10 @@
       </div>
       <div class="col-md-9">
         <div class="tab-content">
-          <div class="tab-pane fade in" id="profile">
+          <div class="tab-pane fade in active" id="profile">
             <center><h1>个人信息</h1></center>
             <hr>
+            <div class="col-md-9">
             <form onsubmit="return false;">
               <div class="form-group">
                 <label for="username">
@@ -165,8 +195,12 @@
                 </label>
                 <input type="text" class="form-control" disabled id="phone">
               </div>
-              <button class="btn btn-warning">编辑</button>
+              <button class="btn btn-warning" id="edit">编辑</button>
             </form>
+            </div>
+            <div class="col-md-3">
+              <img src="" width="100%" id="avatar">
+            </div>
           </div>
           <div class="tab-pane fade" id="course">
             <center><h1>我的课程</h1></center>

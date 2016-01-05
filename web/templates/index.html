@@ -18,6 +18,7 @@
           var studentid=data.info.studentid;
           var email=data.info.email;
           var phone=data.info.phone;
+          var avatar="/static/user/avatar/"+data.info.avatar;
           $("#username").attr("value",username);
           $("#password").attr("value","********");
           $("#name").attr("value",name);
@@ -25,6 +26,7 @@
           $("#studentid").attr("value",studentid);
           $("#email").attr("value",email);
           $("#phone").attr("value",phone);
+          $("#avatar").attr("src",avatar);
         });
         $.getJSON("/api/course/getcourse",function(data,status){
           var course=data.course;
@@ -45,6 +47,34 @@
           var courseid=$(this).attr("courseid");
           window.location.href="/course/"+courseid;
         });
+
+        $("#edit").click(function(){
+          $(this).removeClass("btn-warning").addClass("btn-primary");
+          $("#name").removeAttr("disabled");
+          $("#studentid").removeAttr("disabled");
+          $("#email").removeAttr("disabled");
+          $("#phone").removeAttr("disabled");
+          $(this).text("提交");
+          $(this).addClass("updatesubmit");
+          $(".updatesubmit").click(function(){
+            var name=$("#name").val();
+            var studentid=$("#studentid").val();
+            var email=$("#email").val();
+            var phone=$("#phone").val();
+            var para={
+              "name":name,
+              "studentid":studentid,
+              "email":email,
+              "phone":phone
+            }
+            $.post("/api/user/update",para,function(data,status){
+              if(data.res="00000"){
+                alert("修改成功");
+                window.location.reload();
+              }
+            });
+          });
+        });  
         $("#logout").click(function(){
           $.getJSON("/api/user/logout",function(data,status){
             window.location.href="/login"
@@ -93,76 +123,57 @@
       </div>
       <div class="col-md-9">
         <div class="tab-content">
-          <div class="tab-pane fade in" id="profile">
+          <div class="tab-pane fade in active" id="profile">
             <center><h1>个人信息</h1></center>
             <hr>
-            <form onsubmit="return false;">
-              <div class="form-group">
-                <label for="username">
-                  <h4>用户名</h4>
-                </label>
-                <input type="text" class="form-control" disabled id="username">
-              </div>
-              <div class="form-group">
-                <label for="password">
-                  <h4>密码</h4>
-                </label>
-                <input type="password" class="form-control" disabled id="password">
-              </div>
-              <div class="form-group">
-                <label for="name">
-                  <h4>姓名</h4>
-                </label>
-                <input type="text" class="form-control" disabled id="name">
-              </div>
-              <div class="form-group">
-                <label for="studentid">
-                  <h4>学号</h4>
-                </label>
-                <input type="text" class="form-control" disabled id="studentid">
-              </div>
-              <div class="form-group">
-                <label for="email">
-                 <h4>邮箱</h4>
-                </label>
-                <input type="email" class="form-control" disabled id="email">
-              </div>
-              <div class="form-group">
-                <label for="phone">
-                  <h4>电话</h4>
-                </label>
-                <input type="text" class="form-control" disabled id="phone">
-              </div>
-              <button class="btn btn-warning">编辑</button>
-            </form>
+            <div class="col-md-9">
+              <form onsubmit="return false;">
+                <div class="form-group">
+                  <label for="username">
+                    <h4>用户名</h4>
+                  </label>
+                  <input type="text" class="form-control" disabled id="username">
+                </div>
+                <div class="form-group">
+                  <label for="password">
+                    <h4>密码</h4>
+                  </label>
+                  <input type="password" class="form-control" disabled id="password">
+                </div>
+                <div class="form-group">
+                  <label for="name">
+                    <h4>姓名</h4>
+                  </label>
+                  <input type="text" class="form-control" disabled id="name">
+                </div>
+                <div class="form-group">
+                  <label for="studentid">
+                    <h4>学号</h4>
+                  </label>
+                  <input type="text" class="form-control" disabled id="studentid">
+                </div>
+                <div class="form-group">
+                  <label for="email">
+                   <h4>邮箱</h4>
+                  </label>
+                  <input type="email" class="form-control" disabled id="email">
+                </div>
+                <div class="form-group">
+                  <label for="phone">
+                    <h4>电话</h4>
+                  </label>
+                  <input type="text" class="form-control" disabled id="phone">
+                </div>
+                <button class="btn btn-warning" id="edit">编辑</button>
+              </form>
+            </div>
+            <div class="col-md-3">
+              <img src="" width="100%" id="avatar">
+            </div>
           </div>
           <div class="tab-pane fade" id="course">
             <center><h1>我的课程</h1></center>
             <hr>
-            <!-- <div class="col-md-6">
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  <h3>云计算应用开发</h3>
-                  <h4>王昌栋</h4>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  <h3>数据库系统设计</h3>
-                  <h4>郑贵锋</h4>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  <h3>做人</h3>
-                  <h4>曾兆阳</h4>
-                </div>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>

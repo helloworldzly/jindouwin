@@ -172,6 +172,10 @@ def add_homework(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import get_name_by_userid
+    name = get_name_by_userid(userid)
+    name = name.decode('utf-8')
+
     from lib import check_is_course_teacher
     res = check_is_course_teacher(userid, courseid)
     if res == False:
@@ -185,6 +189,10 @@ def add_homework(courseid):
 
     from lib import add_homework_by_courseid
     add_homework_by_courseid(courseid, description, deadline)
+
+    from lib import add_news_by_courseid
+    add_news_by_courseid(courseid, description, name, 2)
+
     return jsonify(res=SUCCESS)
 
 @api.route('/course/homework/submit/<courseid>/<homeworkid>', methods=['GET','POST'])
@@ -265,6 +273,10 @@ def resource_upload(courseid):
     if userid == None:
         return jsonify(res=USER_NOT_LOGIN_IN)
 
+    from lib import get_name_by_userid
+    name = get_name_by_userid(userid)
+    name = name.decode('utf-8')
+
     from lib import check_is_course_teacher
     res = check_is_course_teacher(userid, courseid)
     if res == False:
@@ -279,8 +291,9 @@ def resource_upload(courseid):
     f.save(path)
 
     from lib import add_resource_by_courseid
-    #print filename
     add_resource_by_courseid(courseid, filename)
+    from lib import add_news_by_courseid
+    add_news_by_courseid(courseid, filename, name, 1)
 
     return jsonify(res=SUCCESS)
 
@@ -306,3 +319,55 @@ def getcourse_resource(courseid):
     from lib import get_resource_by_courseid
     course_resource = get_resource_by_courseid(courseid)
     return jsonify(res=SUCCESS, resource=course_resource)
+
+@api.route('/course/teacher/info/<courseid>', methods=['GET'])
+def course_teacher_info(courseid):
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    from lib import check_user_is_teacher
+    isteacher = check_user_is_teacher(userid)
+    from lib import check_attend_course
+    res = check_attend_course(userid, courseid, isteacher)
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+
+    from lib import get_course_teacher_info_by_courseid
+    teacher = get_course_teacher_info_by_courseid(courseid)
+    return jsonify(res=SUCCESS, teacher=teacher)
+
+@api.route('/course/add/news/<courseid>', methods=['GET'])
+def course_add_news(courseid):
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    form = request.form
+    if not 'notice' in form:
+        return jsonify(res=PARAMETER_WRONG)
+    notice = form['notice']
+
+    from lib import get_name_by_userid
+    name = get_name_by_userid(userid)
+    name = name.decode('utf-8')
+
+    from lib import check_is_course_teacher
+    res = check_is_course_teacher(userid, courseid)
+
+    if res == False:
+        return jsonify(res=PERMISSION_DENIED)
+
+    from lib import add_news_by_courseid
+    add_news_by_courseid(courseid, notice, name, 3)
+    return jsonify(res=SUCCESS)

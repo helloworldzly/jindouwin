@@ -87,22 +87,6 @@ def get_info_by_courseid(courseid):
     course["classroom"] = course_data[5]
     return course
 
-# def get_news_by_courseid(courseid):
-#     from model.mysql import MySQL
-#     sql = MySQL()
-#     cur = sql.cur
-#     cur.execute('select id,description,publisher from news where courseid=%s'%courseid)
-#     res = []
-#     for item in cur:
-#         temp = item
-#         res.append({
-#             'id':temp[0],
-#             'description':temp[1],
-#             'publisher':temp[2]
-#             })
-#     sql.close()
-#     return res
-
 def get_homework_by_courseid(courseid, userid):
     from model.mysql import MySQL
     sql = MySQL()
@@ -227,8 +211,9 @@ def add_news_by_courseid(courseid, description, publisher, newstype):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    command = 'insert into news values(%s,"%s","%s","%s")'%(courseid, description, publisher, newstype)
+    command = 'insert into news values(NULL,%s,"%s","%s",%d)'%(courseid, description, publisher, newstype)
     command = command.encode('utf-8')
+    print command
     cur.execute(command)
     sql.conn.commit()
     sql.close()
@@ -243,7 +228,18 @@ def get_news_by_courseid(courseid):
         res.append({
             'description':item[0],
             'publisher':item[1],
-            'newstype':item[2]
+            'newstype':str(item[2])
             })
     sql.close()
     return res
+
+def get_course_teacher_info_by_courseid(courseid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    cur.execute('select user.name,user.email,user.avatar from user,course where course.id=%s and user.name=course.teacher'%courseid)
+    res = []
+    for item in cur:
+        res.append({'teachername':item[0],'teacheremail':item[1],'teacheravatar':item[2]})
+    sql.close()
+    return res[0]

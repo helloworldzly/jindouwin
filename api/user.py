@@ -24,9 +24,44 @@ def register():
     if check_username_exist(username) == True:
         return jsonify(res=USERNAME_EXIST)
 
-    from lib import user_register
-    user_register(username, password, email, phone, name, studentid, usertype)
+    files = request.files
+    f = files['file']
+    filename = f.filename
+    filetype = filename.split('.')[-1]
+    from lib import generate_session
+    code = generate_session()
+    filename = code + '.' + filetype
+    f.save("static/user/avatar/"+filename)
 
+    from lib import user_register
+    user_register(username, password, email, phone, name, studentid, usertype, filename)
+
+    return jsonify(res=SUCCESS)
+
+@api.route('/user/update', methods=['POST'])
+def update():
+    cookies = request.cookies
+    if not 'session' in cookies:
+        return jsonify(res=PARAMETER_WRONG)
+    session = cookies['session']
+    from lib import get_userid_by_session
+    userid = get_userid_by_session(session)
+    if userid == None:
+        return jsonify(res=USER_NOT_LOGIN_IN)
+
+    form = request.form
+    require = ['email', 'phone', 'name', 'studentid']
+    for item in require:
+        if not item in form:
+            return jsonify(res=PARAMETER_WRONG)
+
+    email = form['email']
+    phone = form['phone']
+    name = form['name']
+    studentid = form['studentid']
+
+    from lib import update_user_info
+    update_user_info(email, phone, name, studentid, userid)
     return jsonify(res=SUCCESS)
 
 @api.route('/user/login', methods=['POST'])

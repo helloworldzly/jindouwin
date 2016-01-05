@@ -11,11 +11,21 @@ def check_username_exist(username):
     sql.close()
     return True
 
-def user_register(username, password, email, phone, name, studentid, usertype):
+def user_register(username, password, email, phone, name, studentid, usertype, filename):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
-    command = 'insert into user values(NULL,"%s","%s","%s","%s","%s","%s",%s)'%(username, password, email, phone, name, studentid, usertype)
+    command = 'insert into user values(NULL,"%s","%s","%s","%s","%s","%s",%s,"%s")'%(username, password, email, phone, name, studentid, usertype,filename)
+    command = command.encode('utf-8')
+    cur.execute(command)
+    sql.conn.commit()
+    sql.close()
+
+def update_user_info(email, phone, name, studentid, userid):
+    from model.mysql import MySQL
+    sql = MySQL()
+    cur = sql.cur
+    command = 'update user set email="%s",phone="%s",name="%s",studentid="%s" where id=%s'%(email, phone, name, studentid, userid)
     command = command.encode('utf-8')
     cur.execute(command)
     sql.conn.commit()
@@ -62,6 +72,7 @@ def get_info_by_id(userid):
     info['phone'] = info_data[4]
     info['name'] = info_data[5]
     info['studentid'] = info_data[6]
+    info['avatar'] = info_data[8]
     return info
 
 def is_teacher(userid):
@@ -91,6 +102,7 @@ def check_user_is_teacher(userid):
     from model.mysql import MySQL
     sql = MySQL()
     cur = sql.cur
+    print('select * from user where id=%s and usertype=2'%userid)
     cur.execute('select * from user where id=%s and usertype=2'%userid)
     if cur.rowcount == 0:
         return False
