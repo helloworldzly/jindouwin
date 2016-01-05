@@ -69,8 +69,30 @@ def course(courseid):
     else:
         return redirect('/login')
 
+@app.route('/homework/<courseid>', methods=['GET'])
+def homework(courseid):
+    cookies = request.cookies
+    if 'session' in cookies:
+        session = cookies['session']
+        from lib import get_userid_by_session
+        userid = get_userid_by_session(session)
+        if userid == None:
+            return redirect('/login')
+        else:
+            from lib import check_user_is_teacher
+            isteacher = check_user_is_teacher(userid)
+
+            from lib import check_attend_course
+            res = check_attend_course(userid, courseid, isteacher)
+            if res == False:
+                return jsonify(res=PERMISSION_DENIED)
+
+            return render_template('homework.html', courseid=courseid)
+    else:
+        return redirect('/login')
+
 @app.route('/homework/<courseid>/<homeworkid>', methods=['GET'])
-def homework(courseid, homeworkid):
+def homework_list(courseid, homeworkid):
     cookies = request.cookies
     if 'session' in cookies:
         session = cookies['session']
@@ -92,9 +114,27 @@ def homework(courseid, homeworkid):
 def course_admin(courseid):
     return render_template('course_admin.html', courseid=courseid)
 
-@app.route('/downloads', methods=['GET'])
-def downloads():
-    pass
+@app.route('/downloads/<courseid>', methods=['GET'])
+def downloads(courseid):
+    cookies = request.cookies
+    if 'session' in cookies:
+        session = cookies['session']
+        from lib import get_userid_by_session
+        userid = get_userid_by_session(session)
+        if userid == None:
+            return redirect('/login')
+        else:
+            from lib import check_user_is_teacher
+            isteacher = check_user_is_teacher(userid)
+
+            from lib import check_attend_course
+            res = check_attend_course(userid, courseid, isteacher)
+            if res == False:
+                return jsonify(res=PERMISSION_DENIED)
+
+            return render_template('downloads.html', courseid=courseid)
+    else:
+        return redirect('/login')
 
 @app.route('/news', methods=['GET'])
 def news():

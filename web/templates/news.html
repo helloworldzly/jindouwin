@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="overflow-y: visible;">
+  <head>
+    <title>筋斗云学堂</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/sprintf.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var courseid="{{courseid}}";
+        $.getJSON("/api/course/info/"+courseid, function(data,status){
+          var course_name=data.info.name;
+          var course_description=data.info.description;
+          var course_teacher=data.info.teacher;
+          var course_time=data.info.time;
+          var course_classroom=data.info.classroom;
+          $("#course_name").text(course_name);
+         // $("#course_description").text(course_description);
+         // $("#course_teacher").text(course_teacher);
+         // $("#course_time").text(course_time);
+         // $("#course_classroom").text(course_classroom)
+        });
+        $.getJSON("/api/course/news/{{courseid}}",function(data,status){
+          var addhtml='<tr>\
+          <td><a href="/resource/{{courseid}}/%s">%s</a></td>\
+          </tr>';
+          if(data.res=="00000"){
+            var resource=data.resource;
+            var i;
+            for(i=resource.length-1;i>=0;i--){
+              $("#resource").append(sprintf(addhtml,resource[i],resource[i]));
+            }
+          }
+        });
+        
+        $.getJSON("/api/user/info",function(data,status){
+          if(data.res=="00000"){
+            $("#teachername").text("王昌栋");
+            $("#hiname").text("你好 "+data.info.name)
+            $("#teacheremail").text("wangcd3@mail2.sysu.edu.cn");
+          }
+        });
+
+        $("#logout").click(function(){
+          $.getJSON("/api/user/logout",function(data,status){
+            window.location.href="/login"
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">筋斗云学堂</a>
+        </div>
+        <div class="collapse navbar-collapse">
+
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <p class="navbar-text" id="hiname"></p>
+            </li>
+            <li>
+              <a href="#" data-toggle="tooltip" data-placement="bottom" title="注销" id="logout">
+                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1 id="course_name"></h1>
+      <h5 id="course_description"></h5>
+      <h5 id="course_teacher"></h5>
+      <h5 id="course_time"></h5>
+      <h5 id="course_classroom"></h5>
+      <table class="table" id="news">
+        
+      </table>
+    </div>
+  </body>
+</html>
