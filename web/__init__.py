@@ -136,9 +136,27 @@ def downloads(courseid):
     else:
         return redirect('/login')
 
-@app.route('/news', methods=['GET'])
-def news():
-    pass
+@app.route('/news/<courseid>', methods=['GET'])
+def news(courseid):
+    cookies = request.cookies
+    if 'session' in cookies:
+        session = cookies['session']
+        from lib import get_userid_by_session
+        userid = get_userid_by_session(session)
+        if userid == None:
+            return redirect('/login')
+        else:
+            from lib import check_user_is_teacher
+            isteacher = check_user_is_teacher(userid)
+
+            from lib import check_attend_course
+            res = check_attend_course(userid, courseid, isteacher)
+            if res == False:
+                return jsonify(res=PERMISSION_DENIED)
+
+            return render_template('news.html', courseid=courseid)
+    else:
+        return redirect('/login')
 
 @app.route('/resource/<courseid>/<filename>', methods=['GET'])
 def resource(courseid, filename):

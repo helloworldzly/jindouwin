@@ -26,14 +26,19 @@
          // $("#course_classroom").text(course_classroom)
         });
         $.getJSON("/api/course/news/{{courseid}}",function(data,status){
-          var addhtml='<tr>\
-          <td><a href="/resource/{{courseid}}/%s">%s</a></td>\
-          </tr>';
           if(data.res=="00000"){
-            var resource=data.resource;
+            var news=data.news;
             var i;
-            for(i=resource.length-1;i>=0;i--){
-              $("#resource").append(sprintf(addhtml,resource[i],resource[i]));
+            for(i=news.length-1;i>=0;i--){
+              if(news[i].newstype=="1"){
+                $("#news").append(sprintf('<tr><td><b>%s</b> 上传了文件 <b>%s</b></td></tr>',news[i].publisher,news[i].description));
+              }
+              else if(news[i].newstype=="2"){
+                $("#news").append(sprintf('<tr><td><b>%s</b> 发布了作业 <b>%s</b></td></tr>',news[i].publisher,news[i].description));
+              }
+              else if(news[i].newstype=="3"){
+                $("#news").append(sprintf('<tr><td>%s</td></tr>',news[i].description));
+              }
             }
           }
         });
