@@ -87,7 +87,10 @@ def homework(courseid):
             if res == False:
                 return jsonify(res=PERMISSION_DENIED)
 
-            return render_template('homework.html', courseid=courseid)
+            if isteacher:
+                return render_template('homework_teacher.html', courseid=courseid)
+            else:
+                return render_template('homework.html', courseid=courseid)
     else:
         return redirect('/login')
 
@@ -131,8 +134,10 @@ def downloads(courseid):
             res = check_attend_course(userid, courseid, isteacher)
             if res == False:
                 return jsonify(res=PERMISSION_DENIED)
-
-            return render_template('downloads.html', courseid=courseid)
+            if isteacher:
+                return render_template('downloads_teacher.html', courseid=courseid)
+            else:
+                return render_template('downloads.html', courseid=courseid)
     else:
         return redirect('/login')
 
@@ -154,7 +159,10 @@ def news(courseid):
             if res == False:
                 return jsonify(res=PERMISSION_DENIED)
 
-            return render_template('news.html', courseid=courseid)
+            if isteacher:
+                return render_template('news_teacher.html', courseid=courseid)
+            else:
+                return render_template('news.html', courseid=courseid)
     else:
         return redirect('/login')
 
