@@ -146,6 +146,9 @@
             }
           }
         });
+        $(".classtitle").click(function(){
+          window.location.href=$(this).attr("href");
+        });
 
         $.getJSON("/api/user/info",function(data,status){
           if(data.res=="00000"){
@@ -197,7 +200,11 @@
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>课程动态</h4>
+            <div class="row">
+              <div class="col-md-8">
+                <h4 class="classtitle" href="/news/{{courseid}}" style="cursor:pointer;">课程动态</h4>
+              </div>
+            </div>
           </div>
           <div class="panel-body" id="news"> 
           </div>
@@ -206,7 +213,11 @@
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>课程资料</h4>
+            <div class="row">
+              <div class="col-md-8">
+                <h4 class="classtitle" href="/downloads/{{courseid}}" style="cursor:pointer;">课程资料</h4>
+              </div>
+            </div>
           </div>
           <div class="panel-body" id="resourceinfo">
           </div>
@@ -215,7 +226,11 @@
       <div class="col-md-7">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>课程作业</h4>
+            <div class="row">
+              <div class="col-md-8">
+                <h4 class="classtitle" href="/homework/{{courseid}}" style="cursor:pointer;">课程作业</h4>
+              </div>
+            </div>
           </div>
           <div class="panel-body" id="homework">
           </div>

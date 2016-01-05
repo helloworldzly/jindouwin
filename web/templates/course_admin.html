@@ -211,6 +211,10 @@
           });
         });
 
+        $(".classtitle").click(function(){
+          window.location.href=$(this).attr("href");
+        });
+
         $("#logout").click(function(){
           $.getJSON("/api/user/logout",function(data,status){
             window.location.href="/login"
@@ -257,7 +261,7 @@
           <div class="panel-heading">
             <div class="row">
               <div class="col-md-8">
-                <h4>课程动态</h4>
+                <h4 class="classtitle" href="/news/{{courseid}}" style="cursor:pointer;">课程动态</h4>
               </div>
               <div class="col-md-4">
                 <button class="btn btn-sm btn-primary" style="float:right;" data-toggle="modal" data-target="#addnotice">发布公告<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -274,9 +278,9 @@
           <div class="panel-heading">
             <div class="row">
               <div class="col-md-8">
-                <h4>课程资料</h4>
+                <h4 class="classtitle" href="/downloads/{{courseid}}" style="cursor:pointer;">课程资料</h4>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" style="">
                 <button class="btn btn-sm btn-primary" style="float:right;" data-toggle="modal" data-target="#addresource">上传资料<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
               </div>
             </div>
@@ -290,7 +294,7 @@
           <div class="panel-heading">
             <div class="row">
               <div class="col-md-8">
-                <h4>课程作业</h4>
+                <h4 class="classtitle" href="/homework/{{courseid}}" style="cursor:pointer;">课程作业</h4>
               </div>
               <div class="col-md-4">
                 <button class="btn btn-sm btn-primary" style="float:right;" data-toggle="modal" data-target="#addhomework">添加作业<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
