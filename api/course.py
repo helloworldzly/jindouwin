@@ -342,7 +342,7 @@ def course_teacher_info(courseid):
     teacher = get_course_teacher_info_by_courseid(courseid)
     return jsonify(res=SUCCESS, teacher=teacher)
 
-@api.route('/course/add/news/<courseid>', methods=['GET'])
+@api.route('/course/add/news/<courseid>', methods=['POST'])
 def course_add_news(courseid):
     cookies = request.cookies
     if not 'session' in cookies:

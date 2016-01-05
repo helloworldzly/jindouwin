@@ -186,7 +186,7 @@
                 $("#news").append(sprintf('<h4><b>%s</b> 发布了作业 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
               }
               else if(news[i].newstype=="3"){
-                $("#news").append(sprintf('<h4>%s</h4>',news[i].description));
+                $("#news").append(sprintf('<h4>%s</h4><hr>',news[i].description));
               }
             }
           }
@@ -206,10 +206,8 @@
             "notice":notice
           };
           $.post("/api/course/add/news/"+courseid,para,function(data,status){
-            if(data.res="00000"){
               alert("发布成功");
               window.location.reload();
-            }
           });
         });
 
@@ -257,7 +255,15 @@
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4>课程动态</h4>
+            <div class="row">
+              <div class="col-md-8">
+                <h4>课程动态</h4>
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-sm btn-primary" style="float:right;" data-toggle="modal" data-target="#addnotice">发布公告<span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+              </div>
+            </div>
+
           </div>
           <div class="panel-body" id="news">
           </div>

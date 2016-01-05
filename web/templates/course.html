@@ -137,8 +137,11 @@
               if(news[i].newstype=="1"){
                 $("#news").append(sprintf('<h4><b>%s</b> 上传了文件 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
               }
-              else{
+              else if(news[i].newstype=="2"){
                 $("#news").append(sprintf('<h4><b>%s</b> 发布了作业 <b>%s</b></h4><hr>',news[i].publisher, news[i].description));
+              }
+              else if(news[i].newstype=="3"){
+                $("#news").append(sprintf('<h4>%s</h4><hr>',news[i].description))
               }
             }
           }
