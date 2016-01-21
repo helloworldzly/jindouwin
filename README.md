@@ -18,7 +18,7 @@ sudo pip install gevent
 sudo apt-get install git
 
 # 下载源码
-git clone https://github.com/zengzhaoyang/zlysb.git
+git clone https://github.com/helloworldzly/jindouwin.git
 
 # 安装mysql
 sudo apt-get install mysql-server
